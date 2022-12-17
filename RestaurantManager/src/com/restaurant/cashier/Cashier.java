@@ -2,6 +2,7 @@ package com.restaurant.cashier;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -32,7 +33,7 @@ public class Cashier {
 	       frame.getContentPane().add(panel);
 	       panel.setLayout(null);
 	       
-	       JLabel lbl_Tab1 = new JLabel();
+	       /*JLabel lbl_Tab1 = new JLabel();
 	       lbl_Tab1.setIcon(new ImageIcon(tbImage.getImage().getScaledInstance(75, 50, Image.SCALE_SMOOTH)));
 	       lbl_Tab1.setHorizontalAlignment(SwingConstants.CENTER);
 	       lbl_Tab1.setBounds(6, 44, 105, 56);
@@ -60,7 +61,18 @@ public class Cashier {
 	       lbl_Tab5.setIcon(new ImageIcon(new ImageIcon("/Users/robin/Downloads/TableRestaurant.png").getImage().getScaledInstance(75, 50, Image.SCALE_SMOOTH)));
 	       lbl_Tab5.setHorizontalAlignment(SwingConstants.CENTER);
 	       lbl_Tab5.setBounds(131, 133, 70, 29);
-	       panel.add(lbl_Tab5);
+	       panel.add(lbl_Tab5);*/
+	       UITable tab_1 = new UITable(new Point(6, 44));
+	       UITable tab_2 = new UITable(new Point(134, 44));
+	       UITable tab_3 = new UITable(new Point(6, 131));
+	       UITable tab_4 = new UITable(new Point(6, 215));
+	       UITable tab_5 = new UITable(new Point(134, 133));
+	       panel.add(tab_1.lbl_Tab);
+	       panel.add(tab_2.lbl_Tab);
+	       panel.add(tab_3.lbl_Tab);
+	       panel.add(tab_4.lbl_Tab);
+	       panel.add(tab_5.lbl_Tab);
+	       
 	       
 	       frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	       frame.setVisible(true);
