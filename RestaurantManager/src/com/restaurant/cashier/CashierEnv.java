@@ -2,6 +2,8 @@ package com.restaurant.cashier;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.Insets;
+import java.awt.LayoutManager;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -16,8 +18,12 @@ import javax.swing.*;
 import com.sun.tools.javac.Main;
 
 import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
@@ -32,41 +38,70 @@ public class CashierEnv {
 	       ImageIcon tbImage = new ImageIcon(url);
 	       final JTextArea textArea = new JTextArea();
 	       textArea.setLineWrap(true);
-	       final JScrollPane scroll = new JScrollPane();
+	       final JScrollPane scroll = new JScrollPane(textArea);
 	       scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+	       scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 	       frame.setSize(800, 500); 
-	       JPanel container = new JPanel(new GridLayout(1, 3));
-	       frame.add(container);
-	       JPanel pnl_Tables = new JPanel();
+	       frame.setResizable(false);
+	       JPanel container = new JPanel(new GridBagLayout());
+	       GridBagConstraints gbc = new GridBagConstraints();
 	       
-	       
-	       pnl_Tables.setBounds(0, 38, 597, 382);
-	       pnl_Tables.setBorder(BorderFactory.createEmptyBorder(30, 30, 10, 30));
-	       
-	       UITable tab_1a = new UITable(new Point(5, 	40), pnl_Tables);
-	       UITable tab_1b = new UITable(new Point(135, 	40), pnl_Tables);
-	       UITable tab_1c = new UITable(new Point(265, 	40), pnl_Tables);
-	       UITable tab_1d = new UITable(new Point(395, 	40), pnl_Tables);
-	       UITable tab_2a = new UITable(new Point(5, 	130), pnl_Tables);
-	       UITable tab_2b = new UITable(new Point(135, 	130), pnl_Tables);
-	       UITable tab_2c = new UITable(new Point(265, 	130), pnl_Tables);
-	       UITable tab_2d = new UITable(new Point(395, 	130), pnl_Tables);
-	       UITable tab_3a = new UITable(new Point(5, 	220), pnl_Tables);
-	       UITable tab_3b = new UITable(new Point(135, 	220), pnl_Tables);
-	       UITable tab_3c = new UITable(new Point(265, 	220), pnl_Tables);
-	       UITable tab_3d = new UITable(new Point(395, 	220), pnl_Tables);
-	       UITable tab_4a = new UITable(new Point(5, 	310), pnl_Tables);
-	       UITable tab_4b = new UITable(new Point(135, 	310), pnl_Tables);
-	       UITable tab_4c = new UITable(new Point(265, 	310), pnl_Tables);
-	       UITable tab_4d = new UITable(new Point(395, 	310), pnl_Tables);
-	       
+	       frame.getContentPane().add(container);
+	       JPanel pnl_Left = new JPanel(new BorderLayout());
+	       JLabel lbl_Title = new JLabel("Stato dei tavoli", SwingConstants.CENTER);
+	       pnl_Left.add(lbl_Title, BorderLayout.NORTH);
+	       JPanel pnl_Tables = new JPanel(null);
+	       pnl_Left.add(pnl_Tables, BorderLayout.CENTER);
+	       JPanel pnl_Buttons = new JPanel(new GridLayout());
+	       JButton btn_OccupaTavolo = new JButton("Occupa tavolo");
+	       JButton btn_ViewOrdini = new JButton("Visualizza ordini");
+	       JButton btn_PagaConto = new JButton("Pagamento conto");
+	       pnl_Buttons.add(btn_OccupaTavolo);
+	       pnl_Buttons.add(btn_ViewOrdini);
+	       pnl_Buttons.add(btn_PagaConto);
+	       pnl_Left.add(pnl_Buttons, BorderLayout.SOUTH);
 	       pnl_Tables.setLayout(null);
-	       container.add(pnl_Tables, BorderLayout.CENTER);
-	       container.add(scroll, BorderLayout.EAST);
-	       container.setBorder(new TitledBorder("Container"));
-	       frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	       frame.setLocationRelativeTo(null); /* AKA freme.CenterScreen() on .NET */
+
 	       
+	       UITable tab_1a = new UITable(new Point(15, 	40), pnl_Tables);
+	       UITable tab_1b = new UITable(new Point(145, 	40), pnl_Tables);
+	       UITable tab_1c = new UITable(new Point(275, 	40), pnl_Tables);
+	       UITable tab_1d = new UITable(new Point(405, 	40), pnl_Tables);
+	       UITable tab_2a = new UITable(new Point(15, 	130), pnl_Tables);
+	       UITable tab_2b = new UITable(new Point(145, 	130), pnl_Tables);
+	       UITable tab_2c = new UITable(new Point(275, 	130), pnl_Tables);
+	       UITable tab_2d = new UITable(new Point(405, 	130), pnl_Tables);
+	       UITable tab_3a = new UITable(new Point(15, 	220), pnl_Tables);
+	       UITable tab_3b = new UITable(new Point(145, 	220), pnl_Tables);
+	       UITable tab_3c = new UITable(new Point(275, 	220), pnl_Tables);
+	       UITable tab_3d = new UITable(new Point(405, 	220), pnl_Tables);
+	       UITable tab_4a = new UITable(new Point(15, 	310), pnl_Tables);
+	       UITable tab_4b = new UITable(new Point(145, 	310), pnl_Tables);
+	       UITable tab_4c = new UITable(new Point(275, 	310), pnl_Tables);
+	       UITable tab_4d = new UITable(new Point(405, 	310), pnl_Tables);
+	       
+	       gbc.fill = GridBagConstraints.HORIZONTAL;
+	       gbc.gridx = 0;
+	       gbc.gridy = 0;
+	       gbc.weightx = 0.6;
+	       gbc.insets = new Insets(0, 10, 0, 0);
+	       gbc.ipady = 420;
+	    		   
+	       container.add(pnl_Left, gbc);
+	       
+	       gbc.gridx = 2;
+	       gbc.gridy = 0;
+	       gbc.weightx = 0.4;
+	       gbc.ipady = 430;
+	       gbc.anchor = GridBagConstraints.EAST;
+	       gbc.insets = new Insets(0, 15, 0, 10);
+	       container.add(scroll, gbc);
+	       pnl_Tables.setBorder(new LineBorder(Color.BLACK, 1, true));
+	       frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	       
+	       frame.setLocationRelativeTo(null); /* AKA frame.CenterScreen() on .NET */
 	       frame.setVisible(true);
+	       
+	       textArea.append("-- Restaurant Manager --");
 	    }
 }
