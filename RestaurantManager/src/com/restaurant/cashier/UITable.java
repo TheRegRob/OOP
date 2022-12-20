@@ -13,6 +13,10 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 public class UITable {
+	public boolean 	occupied;
+	public int		nOfSits;
+	
+	
 	URL url = CashierEnv.class.getResource("/TableRestaurant.png");
 	ImageIcon tbImage = new ImageIcon(url);
 	JLabel lbl_Tab = new JLabel();
