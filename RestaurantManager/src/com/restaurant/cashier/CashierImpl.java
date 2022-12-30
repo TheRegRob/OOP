@@ -5,29 +5,50 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Point;
+import java.awt.Taskbar;
+import java.awt.Toolkit;
+import java.net.URL;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
+import javax.swing.JTextPane;
+import javax.swing.JTree;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 
+import com.restaurant.utils.Logger;
+import com.restaurant.utils.Logger.TypeLog;
+
 public class CashierImpl {
-	private static final int TBL_STARTING_X_POS = 15;
-	private static final int TBL_STARTING_Y_POS = 40;
-	private static final int TBL_OFFSET_X_VAL	= 130;
-	private static final int TBL_OFFSET_Y_VAL	= 90;
+	private static final int 	TBL_STARTING_X_POS = 15;
+	private static final int 	TBL_STARTING_Y_POS = 40;
+	private static final int 	TBL_OFFSET_X_VAL	= 130;
+	private static final int 	TBL_OFFSET_Y_VAL	= 90;
+	final CashierEventListener 	listener			= new CashierEventListener();
 	
 	private final JFrame frame = new JFrame("RestaurantManager - Cassa");
 	
+	public UITable[][] 	tables;
+	public JTextPane 	tb_Log;
+	
+	
 	public void show() {
 		this.frame.setVisible(true);
+	}
+	
+	public void setAppIcon() {
+        final Toolkit defaultToolkit = Toolkit.getDefaultToolkit();
+        final URL imageResource = CashierEnv.class.getResource("/RestMng_Icon.png");
+        final Image image = defaultToolkit.getImage(imageResource);
+        final Taskbar taskbar = Taskbar.getTaskbar();
+		taskbar.setIconImage(image);
 	}
 	
 	public void setDimensions(int x, int y) {
@@ -37,39 +58,45 @@ public class CashierImpl {
 	public void setupComponents() {
 		JPanel container = setupContainer();
 		JPanel pnl_Left = setupLeftPnl();
+		JPanel pnl_Center = setupCenterPnl();
+		JPanel pnl_Right = setupRightPnl();
 		JScrollPane tb_Log = setupTextbox();
-		pnl_Left.add(setupLblPanel("Stato dei tavoli"), BorderLayout.NORTH);
 		JPanel pnl_Tables = setupPnlTables();
 		setupAreaTable(4, 4, pnl_Tables);
-		pnl_Left.add(pnl_Tables, BorderLayout.CENTER);
-		JPanel pnl_Buttons = setupPnlButtons();
-		pnl_Left.add(pnl_Buttons, BorderLayout.SOUTH);
-		container.add(pnl_Left, setConstraints(0, 0, GridBagConstraints.HORIZONTAL, 0.6, new Insets(0, 10, 0, 0), 420));
-		container.add(tb_Log, setConstraints(2, 0, GridBagConstraints.HORIZONTAL, 0.4, new Insets(0, 15, 0, 10), 430));
+		pnl_Center.add(pnl_Tables, BorderLayout.CENTER);
+		pnl_Right.add(tb_Log, BorderLayout.CENTER);
+		JTree tv_TreeOrders = setupTreeView();
+		pnl_Left.add(tv_TreeOrders, BorderLayout.CENTER);
+		container.add(pnl_Left, setConstraints(0, 0, GridBagConstraints.HORIZONTAL, 0.4, new Insets(0, 10, 0, 0), 450));
+		container.add(pnl_Center, setConstraints(1, 0, GridBagConstraints.HORIZONTAL, 0.4, new Insets(0, 10, 0, 0), 420));
+		container.add(pnl_Right, setConstraints(2, 0, GridBagConstraints.HORIZONTAL, 0.7, new Insets(0, 10, 0, 10), 430));
 		frame.getContentPane().add(container);
 		this.frame.setResizable(false);
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.frame.setLocationRelativeTo(null);	
 
 	}
-	
-	public JScrollPane setupTextbox() {
-		final JTextArea textArea = new JTextArea();
-		textArea.setLineWrap(true);
-		final JScrollPane scroll = new JScrollPane(textArea);
-		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-	    scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-	    textArea.append("- Restaurant Manager -");
-	    return scroll;
-	}
-	
+	/* START - Container */
 	public JPanel setupContainer() {
 		JPanel container = new JPanel(new GridBagLayout());
 		return container;
 	}
+	/* END - Container*/
 	
+	/* START - Left Panel */
 	public JPanel setupLeftPnl() {
 		JPanel pnl = new JPanel(new BorderLayout());
+		pnl.add(setupLblPanel("Stato degli ordini"), BorderLayout.NORTH);
+		return pnl;
+	}
+	/* END - Left Panel */
+	
+	/* START - Center Panel */
+	public JPanel setupCenterPnl() {
+		JPanel pnl = new JPanel(new BorderLayout());
+		pnl.add(setupLblPanel("Stato dei tavoli"), BorderLayout.NORTH);
+		JPanel pnl_Buttons = setupPnlButtons();
+		pnl.add(pnl_Buttons, BorderLayout.SOUTH);
 		return pnl;
 	}
 	
@@ -85,38 +112,75 @@ public class CashierImpl {
 	}
 	
 	public JPanel setupPnlButtons() {
-		JPanel pnl = new JPanel(new GridLayout());
-		String[] texts = new String[3];
-		texts[0] = "Occupa tavolo";
-		texts[1] = "Visualizza ordini";
-		texts[2] = "Pagamento conto";
-		JButton[] btns = setupButtons(3, texts);
+		JPanel pnl 			= new JPanel(new GridLayout());
+		String[] texts 		= new String[3];
+		String[] actCmds 	= new String[3];
+		texts[0] 			= "Occupa tavolo";
+		texts[1] 			= "Libera tavolo";
+		texts[2] 			= "Pagamento conto";
+		actCmds[0]			= CashierEventListener.eventList[CashierEventListener.EventsIdx.ev_BtnOccupyTbl.getValue()];
+		actCmds[1]			= CashierEventListener.eventList[CashierEventListener.EventsIdx.ev_BtnClearTbl.getValue()];
+		actCmds[2]			= CashierEventListener.eventList[CashierEventListener.EventsIdx.ev_BtnPayBill.getValue()];
+		JButton[] btns = setupButtons(3, texts, actCmds);
 		for (int i = 0; i < 3; i++) {
 			pnl.add(btns[i]);
 		}
 		return pnl;
 	}
 	
-	public JButton[] setupButtons(int nOfButton, String[] texts) {
+	public JButton[] setupButtons(int nOfButton, String[] texts, String[] cmds) {
 		JButton[] btnList = new JButton[nOfButton];
 		for(int i = 0; i < nOfButton; i++) {
 			JButton btn = new JButton(texts[i]);
+			btn.setActionCommand(cmds[i]);
+			btn.addActionListener(listener);
 			btnList[i] = btn;
 		}
 		return btnList;
 	}
 	
 	public void setupAreaTable(int rows, int columns, JPanel pnl) {
+		tables = new UITable[rows][columns];
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < columns; j++) {
 				int x = TBL_STARTING_X_POS + (TBL_OFFSET_X_VAL * i);
 				int y = TBL_STARTING_Y_POS + (TBL_OFFSET_Y_VAL * j);
 				Point pt = new Point(x, y);
 				UITable tbl = new UITable(pt, pnl);
+				tables[i][j] = tbl;
+				tables[i][j].addTable();
 			}
 		}
 	}
+	/* END - Center Panel */
 	
+	/* START - Right Panel */
+	public JPanel setupRightPnl() {
+		JPanel pnl = new JPanel(new BorderLayout());
+		pnl.add(setupLblPanel("Cronologia eventi"), BorderLayout.NORTH);
+		
+		return pnl;
+	}
+	
+	public JScrollPane setupTextbox() {
+		this.tb_Log = new JTextPane();
+		final JScrollPane scroll = new JScrollPane(tb_Log);
+		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+	    scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+	    scroll.setBorder(new LineBorder(Color.BLACK, 1, true));
+	    Logger.Log(TypeLog.tl_Info, "Restaurant Manager avviato");
+	    return scroll;
+	}
+	/* END - Left Panel */
+	
+
+	public JTree setupTreeView() {
+		JTree treeView = new JTree();
+		treeView.setBorder(new LineBorder(Color.BLACK, 1, true));
+		return treeView;
+	}
+	
+	/* START - Layouts */
 	public GridBagConstraints setConstraints(int grdX, int grdY, int pos, double wgtX, Insets borders, int height) {
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.gridx = grdX;
@@ -127,5 +191,5 @@ public class CashierImpl {
 		gbc.ipady = height;
 		return gbc;
 	}
-	
+	/* END - Layouts */
 }

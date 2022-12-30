@@ -1,10 +1,12 @@
 package com.restaurant.cashier;
 
 public class CashierEnv{
+	public final static CashierImpl ci = new CashierImpl();	
 	public static void main(String args[]){
-		final CashierImpl ci = new CashierImpl();
-	       ci.setDimensions(800, 500);
-	       ci.setupComponents();
-	       ci.show();
+			
+			ci.setAppIcon();   
+			ci.setDimensions(950, 500);
+			ci.setupComponents();
+			ci.show();
 	    }
 }

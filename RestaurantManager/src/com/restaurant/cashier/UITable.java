@@ -7,7 +7,6 @@ import java.net.URL;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
@@ -15,6 +14,8 @@ import javax.swing.SwingConstants;
 public class UITable {
 	public boolean 	occupied;
 	public int		nOfSits;
+	Point 			location;
+	JPanel 			pnlDest;
 	
 	
 	URL url = CashierEnv.class.getResource("/TableRestaurant.png");
@@ -23,13 +24,17 @@ public class UITable {
 	int width = 105;
 	int height = 56;
 	
-	public UITable(Point location, JPanel dest) {
+	public UITable(Point loc, JPanel dest) {
+		location = loc;
+		pnlDest = dest;
+	}
+    
+	public void addTable() {
 		lbl_Tab.setIcon(new ImageIcon(tbImage.getImage().getScaledInstance(75, 50, Image.SCALE_SMOOTH)));
 		lbl_Tab.setBorder(BorderFactory.createLineBorder(Color.GREEN, 1, true));
 		lbl_Tab.setHorizontalAlignment(SwingConstants.CENTER);
 		lbl_Tab.setBounds(location.x, location.y, width, height);
-		dest.add(lbl_Tab);
+		pnlDest.add(lbl_Tab);
 	}
-    
     
 }
