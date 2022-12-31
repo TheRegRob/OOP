@@ -27,6 +27,11 @@ import com.restaurant.utils.Logger;
 import com.restaurant.utils.Logger.TypeLog;
 
 public class CashierImpl {
+	String[] columnID = {
+			"A", "B", "C", "D",
+			"E", "F", "G", "H"
+	};
+	
 	private static final int 	TBL_STARTING_X_POS = 15;
 	private static final int 	TBL_STARTING_Y_POS = 40;
 	private static final int 	TBL_OFFSET_X_VAL	= 130;
@@ -37,7 +42,9 @@ public class CashierImpl {
 	
 	public UITable[][] 	tables;
 	public JTextPane 	tb_Log;
-	
+	public JButton		btn_OccupyTable;
+	public JButton		btn_FreeTable;
+	public JButton		btn_PayBill;
 	
 	public void show() {
 		this.frame.setVisible(true);
@@ -122,6 +129,9 @@ public class CashierImpl {
 		actCmds[1]			= CashierEventListener.eventList[CashierEventListener.EventsIdx.ev_BtnClearTbl.getValue()];
 		actCmds[2]			= CashierEventListener.eventList[CashierEventListener.EventsIdx.ev_BtnPayBill.getValue()];
 		JButton[] btns = setupButtons(3, texts, actCmds);
+		btn_OccupyTable = btns[0];
+		btn_FreeTable	= btns[1];
+		btn_PayBill		= btns[2];
 		for (int i = 0; i < 3; i++) {
 			pnl.add(btns[i]);
 		}
@@ -134,6 +144,7 @@ public class CashierImpl {
 			JButton btn = new JButton(texts[i]);
 			btn.setActionCommand(cmds[i]);
 			btn.addActionListener(listener);
+			btn.setEnabled(false);
 			btnList[i] = btn;
 		}
 		return btnList;
@@ -146,7 +157,7 @@ public class CashierImpl {
 				int x = TBL_STARTING_X_POS + (TBL_OFFSET_X_VAL * i);
 				int y = TBL_STARTING_Y_POS + (TBL_OFFSET_Y_VAL * j);
 				Point pt = new Point(x, y);
-				UITable tbl = new UITable(pt, pnl);
+				UITable tbl = new UITable(pt, pnl, 5, Integer.toString(i) + columnID[j]);
 				tables[i][j] = tbl;
 				tables[i][j].addTable();
 			}

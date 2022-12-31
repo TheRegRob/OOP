@@ -64,10 +64,6 @@ public class CashierEventListener implements ActionListener {
 		switch(e.getActionCommand()) {
 		case "btn_OccupyTable":
 			Logger.Log(TypeLog.tl_Info, "Evento occupy table");
-			Logger.Log(TypeLog.tl_CustomerEvent, "Evento occupy table");
-			Logger.Log(TypeLog.tl_KitchenEvent, "Evento occupy table");
-			Logger.Log(TypeLog.tl_Debug, "Evento occupy table");
-			Logger.Log(TypeLog.tl_Error, "Evento occupy table");
 		}
 	}
 
