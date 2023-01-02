@@ -1,8 +1,13 @@
 package com.restaurant.cashier;
 import java.awt.event.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import javax.swing.JOptionPane;
+
+import com.restaurant.cashier.DialogBoxes.db_SetNumberCustomers;
 import com.restaurant.utils.Logger;
 import com.restaurant.utils.Logger.TypeLog;
 
@@ -63,7 +68,33 @@ public class CashierEventListener implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()) {
 		case "btn_OccupyTable":
-			Logger.Log(TypeLog.tl_Info, "Evento occupy table");
+			db_SetNumberCustomers db = new db_SetNumberCustomers(CashierEnv.ci.frame);
+			int res = db.show();
+			if (res == JOptionPane.OK_OPTION) {
+				List<UITable> tmpList = new ArrayList<>();
+				if (db.cb_NCustomers.getSelectedIndex() <= CashierEnv.MAX_SITS) {
+					tmpList.add(db.chainedTbls.get(0));
+				} else {
+					int tmpVal = db.cb_NCustomers.getSelectedIndex() + 1;
+					int i = 0;
+					while (tmpVal >= 6) {
+						tmpList.add(db.chainedTbls.get(i));
+						i++;
+						tmpVal -= 6;
+					}
+					if (tmpVal > 0) {
+						tmpList.add(db.chainedTbls.get(i));
+					}
+				}
+				for (UITable tbl : tmpList) {
+					tbl.occupied = true;
+					tbl.mergedTbls = tmpList;
+					tbl.updateBorder(UITable.bdr_OutsideBusy);
+					//tbl.addMergeArrow();
+				}
+				CashierEnv.selectedTable.occupied = true;
+				CashierEnv.clearSelection();
+			}
 		}
 	}
 

@@ -27,10 +27,7 @@ import com.restaurant.utils.Logger;
 import com.restaurant.utils.Logger.TypeLog;
 
 public class CashierImpl {
-	String[] columnID = {
-			"A", "B", "C", "D",
-			"E", "F", "G", "H"
-	};
+	String columnIDs = "ABCDEFGH";
 	
 	private static final int 	TBL_STARTING_X_POS = 15;
 	private static final int 	TBL_STARTING_Y_POS = 40;
@@ -38,7 +35,7 @@ public class CashierImpl {
 	private static final int 	TBL_OFFSET_Y_VAL	= 90;
 	final CashierEventListener 	listener			= new CashierEventListener();
 	
-	private final JFrame frame = new JFrame("RestaurantManager - Cassa");
+	public final JFrame frame = new JFrame("RestaurantManager - Cassa");
 	
 	public UITable[][] 	tables;
 	public JTextPane 	tb_Log;
@@ -154,10 +151,10 @@ public class CashierImpl {
 		tables = new UITable[rows][columns];
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < columns; j++) {
-				int x = TBL_STARTING_X_POS + (TBL_OFFSET_X_VAL * i);
-				int y = TBL_STARTING_Y_POS + (TBL_OFFSET_Y_VAL * j);
+				int x = TBL_STARTING_X_POS + (TBL_OFFSET_X_VAL * j);
+				int y = TBL_STARTING_Y_POS + (TBL_OFFSET_Y_VAL * i);
 				Point pt = new Point(x, y);
-				UITable tbl = new UITable(pt, pnl, 5, Integer.toString(i) + columnID[j]);
+				UITable tbl = new UITable(pt, pnl, 5, Integer.toString(i + 1) + columnIDs.charAt(j));
 				tables[i][j] = tbl;
 				tables[i][j].addTable();
 			}

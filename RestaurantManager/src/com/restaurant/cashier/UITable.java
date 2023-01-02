@@ -7,6 +7,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.net.URL;
 import java.util.Date;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -17,26 +18,27 @@ import javax.swing.border.Border;
 
 public class UITable {
 	
-	public boolean 	occupied;
-	public boolean	selected;
-	public int		nOfSits;
-	public String	tableID;
-	public int		nOfCustomers;
-	public Date		OccupyTime;
+	public boolean 			occupied;
+	public boolean			booked;
+	public int				nOfSits;
+	public String			tableID;
+	public int				nOfCustomers;
+	public Date				occupyTime;
+	public List<UITable>	mergedTbls;
+	public UITable			sx_NextTbl;
+	public UITable			dx_NextTbl;
 	
-	Point 			location;
-	JPanel 			pnlDest;
-	TableListener	listener;
+	Point 					location;
+	JPanel 					pnlDest;
+	TableListener			listener;
 	
 	public static Border bdr_AboveFree 	= BorderFactory.createLineBorder(Color.GREEN, 		2);
 	public static Border bdr_OutsideFree 	= BorderFactory.createLineBorder(Color.GREEN, 	1);
 	public static Border bdr_AboveBusy	= BorderFactory.createLineBorder(Color.RED, 		2);
 	public static Border bdr_OutsideBusy 	= BorderFactory.createLineBorder(Color.RED, 	1);
 	
-	public static Border bdr_FreeSelected = BorderFactory.createLineBorder(Color.GREEN, 	4);
-	public static Border bdr_BusySelected = BorderFactory.createLineBorder(Color.RED, 		4);
-	
-	
+	public static Border bdr_FreeSelected = BorderFactory.createLineBorder(Color.GREEN, 	3);
+	public static Border bdr_BusySelected = BorderFactory.createLineBorder(Color.RED, 		3);
 	
 	
 	URL url = CashierEnv.class.getResource("/TableRestaurant.png");
@@ -51,7 +53,16 @@ public class UITable {
 		pnlDest = dest;
 		nOfSits = n_seats;
 		tableID = id;
-		
+		mergedTbls = null;
+		dx_NextTbl = null;
+		int i = Character.getNumericValue(id.charAt(0) - 1);
+		int j = CashierEnv.ci.columnIDs.indexOf(id.charAt(1));
+		if (CashierEnv.ci.tables[i][j] != CashierEnv.ci.tables[i][0]) {
+			sx_NextTbl = CashierEnv.ci.tables[i][j - 1];
+			CashierEnv.ci.tables[i][j - 1].dx_NextTbl = this;
+		} else {
+			sx_NextTbl = null;
+		}
 		occupied = false;
 	}
     
@@ -65,8 +76,17 @@ public class UITable {
 		pnlDest.add(lbl_Tab);
 	}
 	
-	public  void updateBorder(Border border) {
+	public void updateBorder(Border border) {
 		this.lbl_Tab.setBorder(border);
+	}
+	
+	public void addMergeArrow() {
+		JLabel tmpLbl  = new JLabel();
+		URL imageResource = CashierEnv.class.getResource("/RestMng_Icon.png");
+		ImageIcon tbImage2 = new ImageIcon(imageResource);
+		tmpLbl.setIcon(tbImage2);
+		tmpLbl.setBounds(location.x, location.y, width, height);
+		pnlDest.add(tmpLbl);
 	}
 	
 	class TableListener implements MouseListener {
@@ -74,19 +94,6 @@ public class UITable {
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			CashierEnv.toggleTableStatus(tableID);
-			if (selected) {
-				if (occupied) {
-					updateBorder(bdr_BusySelected);
-				} else {
-					updateBorder(bdr_FreeSelected);
-				}
-			} else {
-				if (occupied) {
-					updateBorder(bdr_AboveBusy);
-				} else {
-					updateBorder(bdr_AboveFree);
-				}
-			}
 		}
 
 		@Override
@@ -103,7 +110,7 @@ public class UITable {
 
 		@Override
 		public void mouseEntered(MouseEvent e) {
-			if (!selected) {
+			if (CashierEnv.selectedTable == null || tableID != CashierEnv.selectedTable.tableID) {
 				if (occupied) {
 					updateBorder(bdr_AboveBusy);
 				} else {
@@ -115,7 +122,7 @@ public class UITable {
 
 		@Override
 		public void mouseExited(MouseEvent e) {
-			if (!selected) {
+			if (CashierEnv.selectedTable == null || tableID != CashierEnv.selectedTable.tableID) {
 				if (occupied) {
 					updateBorder(bdr_OutsideBusy);
 				} else {
