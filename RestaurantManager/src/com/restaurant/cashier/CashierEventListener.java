@@ -65,32 +65,42 @@ public class CashierEventListener implements ActionListener {
 		}
 	}
 	
-	
-	private void sortTmpTbl(List<UITable> list) {
-		boolean loopAgain = false;
-		for (UITable tbl : list) {
-			if (list.indexOf(tbl) < list.size() - 1) {
-				int posX_prev = CashierEnv.ci.columnIDs.indexOf(tbl.tableID.charAt(1));
-				int posX_next = CashierEnv.ci.columnIDs.indexOf(list.get(list.indexOf(tbl) + 1).tableID.charAt(1));
-				if (posX_prev > posX_next) {
-					UITable t1 = tbl;
-					UITable t2 = list.get(list.indexOf(tbl)+ 1);
-					int posT1 = list.indexOf(tbl);
-					int posT2 = posT1 + 1;
-					list.set(posT1, t2);
-					list.set(posT2, t1);
-					loopAgain = true;
-				}
-			}
-		}
-		if (loopAgain) {
-			sortTmpTbl(list);
-		}
-	}
-	
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()) {
 		case "btn_OccupyTable":
+			mng_OccupyTbl.updateValues();
+			break;
+		default:
+			break;
+		}
+	}
+	
+
+	static class mng_OccupyTbl {
+		
+		private static void sortTmpTbl(List<UITable> list) {
+			boolean loopAgain = false;
+			for (UITable tbl : list) {
+				if (list.indexOf(tbl) < list.size() - 1) {
+					int posX_prev = CashierEnv.ci.columnIDs.indexOf(tbl.tableID.charAt(1));
+					int posX_next = CashierEnv.ci.columnIDs.indexOf(list.get(list.indexOf(tbl) + 1).tableID.charAt(1));
+					if (posX_prev > posX_next) {
+						UITable t1 = tbl;
+						UITable t2 = list.get(list.indexOf(tbl)+ 1);
+						int posT1 = list.indexOf(tbl);
+						int posT2 = posT1 + 1;
+						list.set(posT1, t2);
+						list.set(posT2, t1);
+						loopAgain = true;
+					}
+				}
+				if (loopAgain) {
+					sortTmpTbl(list);
+				}
+			}
+		}
+		/*ID_Table;NofPeople;Hrs*/
+		public static void updateValues() {
 			db_SetNumberCustomers db = new db_SetNumberCustomers(CashierEnv.ci.frame);
 			int res = db.show();
 			if (res == JOptionPane.OK_OPTION) {
@@ -117,48 +127,43 @@ public class CashierEventListener implements ActionListener {
 					if (tmpList.indexOf(tbl) < tmpList.size() - 1) {
 						tbl.addMergeArrow();
 					}
-					//tbl.addMergeArrow();
 				}
 				CashierEnv.selectedTable.occupied = true;
 				CashierEnv.clearSelection();
 			}
 		}
 	}
-
-	public void mng_OccupyTbl() {
-		/*ID_Table;NofPeople;Hrs*/
-		
-	}
 	
-	public void mng_ClearTbl() {
+	static class mng_ClearTbl {
 		/*ID_Table*/
 		
 	}
 	
-	public void mng_PayBill() {
+	static class mng_PayBill {
 		/* ID_Table */
 	}
 	
-	public void mng_OrderReceived() {
+	static class mng_OrderReceived {
 		/* MQTT_Order */
 	}
 	
-	public void mng_ChangedOrder() {
+	static class mng_ChangedOrder {
 		/* MQTT_Order */
 		
 	}
 	
-	public void mng_AskedBill() {
+	static class mng_AskedBill {
 		/* MQTT_AskedBill */
 		
 	}
 	
-	public void mng_DishTakenCharge() {
+	static class mng_DishTakenCharge {
 		/* MQTT_DishTakenCharge */
 		
 	}
 	
-	public void mng_DishPrepared() {
+	static class mng_DishPrepared {
 		/* MQTT_DishPreared */
 	}
+	
 }
