@@ -65,6 +65,29 @@ public class CashierEventListener implements ActionListener {
 		}
 	}
 	
+	
+	private void sortTmpTbl(List<UITable> list) {
+		boolean loopAgain = false;
+		for (UITable tbl : list) {
+			if (list.indexOf(tbl) < list.size() - 1) {
+				int posX_prev = CashierEnv.ci.columnIDs.indexOf(tbl.tableID.charAt(1));
+				int posX_next = CashierEnv.ci.columnIDs.indexOf(list.get(list.indexOf(tbl) + 1).tableID.charAt(1));
+				if (posX_prev > posX_next) {
+					UITable t1 = tbl;
+					UITable t2 = list.get(list.indexOf(tbl)+ 1);
+					int posT1 = list.indexOf(tbl);
+					int posT2 = posT1 + 1;
+					list.set(posT1, t2);
+					list.set(posT2, t1);
+					loopAgain = true;
+				}
+			}
+		}
+		if (loopAgain) {
+			sortTmpTbl(list);
+		}
+	}
+	
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()) {
 		case "btn_OccupyTable":
@@ -86,10 +109,14 @@ public class CashierEventListener implements ActionListener {
 						tmpList.add(db.chainedTbls.get(i));
 					}
 				}
+				sortTmpTbl(tmpList);
 				for (UITable tbl : tmpList) {
 					tbl.occupied = true;
 					tbl.mergedTbls = tmpList;
-					tbl.updateBorder(UITable.bdr_OutsideBusy);
+					tbl.updateBorder(UITable.bdr_OutsideBusy);	
+					if (tmpList.indexOf(tbl) < tmpList.size() - 1) {
+						tbl.addMergeArrow();
+					}
 					//tbl.addMergeArrow();
 				}
 				CashierEnv.selectedTable.occupied = true;

@@ -42,6 +42,7 @@ public class CashierImpl {
 	public JButton		btn_OccupyTable;
 	public JButton		btn_FreeTable;
 	public JButton		btn_PayBill;
+	public JPanel		pnl_Tables;
 	
 	public void show() {
 		this.frame.setVisible(true);
@@ -65,7 +66,7 @@ public class CashierImpl {
 		JPanel pnl_Center = setupCenterPnl();
 		JPanel pnl_Right = setupRightPnl();
 		JScrollPane tb_Log = setupTextbox();
-		JPanel pnl_Tables = setupPnlTables();
+		pnl_Tables = setupPnlTables();
 		setupAreaTable(4, 4, pnl_Tables);
 		pnl_Center.add(pnl_Tables, BorderLayout.CENTER);
 		pnl_Right.add(tb_Log, BorderLayout.CENTER);

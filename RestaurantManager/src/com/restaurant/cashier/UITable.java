@@ -27,6 +27,7 @@ public class UITable {
 	public List<UITable>	mergedTbls;
 	public UITable			sx_NextTbl;
 	public UITable			dx_NextTbl;
+	public ArrowChain		arrow;
 	
 	Point 					location;
 	JPanel 					pnlDest;
@@ -81,13 +82,9 @@ public class UITable {
 	}
 	
 	public void addMergeArrow() {
-		JLabel tmpLbl  = new JLabel();
-		URL imageResource = CashierEnv.class.getResource("/RestMng_Icon.png");
-		ImageIcon tbImage2 = new ImageIcon(imageResource);
-		tmpLbl.setIcon(tbImage2);
-		tmpLbl.setBounds(location.x, location.y, width, height);
-		pnlDest.add(tmpLbl);
+		arrow = new ArrowChain(this);
 	}
+	
 	
 	class TableListener implements MouseListener {
 
