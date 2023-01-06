@@ -29,8 +29,9 @@ public class ArrowChain {
 	}
 	
 	public void removeArrow() {
-		this.tbl.pnlDest.remove(this.lbl);
-		this.tbl.arrow = null;
+			this.tbl.pnlDest.remove(this.lbl);
+			this.tbl.arrow = null;
+			tbl.pnlDest.repaint();
 	}
 	
 }

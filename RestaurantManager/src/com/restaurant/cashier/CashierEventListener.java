@@ -71,22 +71,11 @@ public class CashierEventListener implements ActionListener {
 		switch(e.getActionCommand()) {
 		case "btn_OccupyTable":
 			mng_OccupyTbl.updateValues();
-			if (mng_OccupyTbl.nOfCustomers > CashierEnv.MAX_SITS) {
-				String tblSits 	= Integer.toString(mng_OccupyTbl.nOfCustomers);
-				StringBuilder str = new StringBuilder();
-				for (int i = 0; i < mng_OccupyTbl.occupiedTables.size(); i++) {
-					str.append(mng_OccupyTbl.occupiedTables.get(i).tableID);
-					if (i + 1 < mng_OccupyTbl.occupiedTables.size()) {
-						str.append(", ");
-					}
-				}
-				Logger.Log(TypeLog.tl_Info, "Occupati tavoli " + str + " per " + tblSits + " persone");
-			} else {
-				String tblSits 	= Integer.toString(mng_OccupyTbl.nOfCustomers);
-				String tblID 	= mng_OccupyTbl.occupiedTables.get(0).tableID;
-				String perStr	= mng_OccupyTbl.nOfCustomers > 1 ? " persone" : " persona";
-				Logger.Log(TypeLog.tl_Info, "Occupato tavolo " + tblID + " per " + tblSits + perStr);
-			}	
+			mng_OccupyTbl.logEvents();
+			break;
+		case "btn_ClearTable":
+			mng_ClearTbl.clearTable();
+			mng_ClearTbl.logEvents();
 			break;
 		default:
 			break;
@@ -145,10 +134,12 @@ public class CashierEventListener implements ActionListener {
 				}
 				sortTmpTbl(tmpList);
 				occupiedTables = tmpList;
+				List<UITable> copyList = new ArrayList<>(tmpList);
 				
 				for (UITable tbl : tmpList) {
 					tbl.occupied = true;
-					tbl.chainedTbls = tmpList;
+					tbl.nOfCustomers = nOfCustomers;
+					tbl.chainedTbls = copyList;
 					tbl.updateBorder(UITable.bdr_OutsideBusy);
 					if (tmpList.indexOf(tbl) < tmpList.size() - 1) {
 						tbl.addMergeArrow();
@@ -158,10 +149,65 @@ public class CashierEventListener implements ActionListener {
 				CashierEnv.clearSelection();
 			}
 		}
+	
+		public static void logEvents() {
+			if (nOfCustomers > CashierEnv.MAX_SITS) {
+				String tblSits 	= Integer.toString(nOfCustomers);
+				StringBuilder str = new StringBuilder();
+				for (int i = 0; i < occupiedTables.size(); i++) {
+					str.append(occupiedTables.get(i).tableID);
+					if (i + 1 < occupiedTables.size()) {
+						str.append(", ");
+					}
+				}
+				Logger.Log(TypeLog.tl_Info, "Occupati tavoli " + str + " per " + tblSits + " persone");
+			} else {
+				String tblSits 	= Integer.toString(mng_OccupyTbl.nOfCustomers);
+				String tblID 	= mng_OccupyTbl.occupiedTables.get(0).tableID;
+				String perStr	= mng_OccupyTbl.nOfCustomers > 1 ? " persone" : " persona";
+				Logger.Log(TypeLog.tl_Info, "Occupato tavolo " + tblID + " per " + tblSits + perStr);
+			}	
+		}
 	}
 	
 	static class mng_ClearTbl {
 		/*ID_Table*/
+		private static int				nOfCustomers;
+		private static List<UITable>	occupiedTables;
+		
+		public static void clearTable() {
+			nOfCustomers = CashierEnv.selectedTable.nOfCustomers;
+			occupiedTables = new ArrayList<>(CashierEnv.selectedTable.chainedTbls);
+			for (int i = 0; i < CashierEnv.selectedTable.chainedTbls.size(); i++) {
+				UITable tbl = CashierEnv.selectedTable.chainedTbls.get(i);
+				if (tbl.arrow != null) {
+					tbl.arrow.removeArrow();
+				}
+				tbl.occupied = false;
+				tbl.nOfCustomers = 0;
+				tbl.updateBorder(UITable.bdr_OutsideFree);
+			}
+			CashierEnv.selectedTable.chainedTbls = null;
+			CashierEnv.clearSelection();
+		}
+		public static void logEvents() {
+			if (nOfCustomers > CashierEnv.MAX_SITS) {
+				String tblSits 	= Integer.toString(nOfCustomers);
+				StringBuilder str = new StringBuilder();
+				for (int i = 0; i < occupiedTables.size(); i++) {
+					str.append(occupiedTables.get(i).tableID);
+					if (i + 1 < occupiedTables.size()) {
+						str.append(", ");
+					}
+				}
+				Logger.Log(TypeLog.tl_Info, "Liberati tavoli " + str);
+			} else {
+				String tblSits 	= Integer.toString(mng_OccupyTbl.nOfCustomers);
+				String tblID 	= mng_OccupyTbl.occupiedTables.get(0).tableID;
+				String perStr	= mng_OccupyTbl.nOfCustomers > 1 ? " persone" : " persona";
+				Logger.Log(TypeLog.tl_Info, "Liberato tavolo " + tblID);
+			}	
+		}
 		
 	}
 	
