@@ -1,1 +1,1 @@
-rootProject.name = "sample-gradle-project"
+rootProject.name = "restaurant_manager"

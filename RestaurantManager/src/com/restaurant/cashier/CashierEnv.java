@@ -1,5 +1,7 @@
 package com.restaurant.cashier;
 
+import java.util.List;
+
 public class CashierEnv{
 	public static final	int MAX_SITS = 6;
 	public boolean tableIsSelected = false;
@@ -27,27 +29,40 @@ public class CashierEnv{
 		if (selectedTable == null) {
 			selectedTable = getTblFromID(id);
 			if (selectedTable.occupied) {
-				selectedTable.updateBorder(UITable.bdr_BusySelected);
+				List<UITable> chainedTbls = getTblFromID(id).chainedTbls;
+				for (int i = 0; i < chainedTbls.size(); i++) {
+					chainedTbls.get(i).updateBorder(UITable.bdr_BusySelected);
+				}
 			} else {
 				selectedTable.updateBorder(UITable.bdr_FreeSelected);
 			}	
 		} else {
+			
 			if (selectedTable.tableID == id) {
 				if (selectedTable.occupied) {
-					selectedTable.updateBorder(UITable.bdr_AboveBusy);
+					List<UITable> chainedTbls = getTblFromID(id).chainedTbls;
+					for (int i = 0; i < chainedTbls.size(); i++) {
+						chainedTbls.get(i).updateBorder(UITable.bdr_AboveBusy);
+					}
 				} else {
 					selectedTable.updateBorder(UITable.bdr_AboveFree);
 				}
 				selectedTable = null;
 			} else {
 				if (selectedTable.occupied) {
-					selectedTable.updateBorder(UITable.bdr_OutsideBusy);
+					List<UITable> chainedTbls = getTblFromID(id).chainedTbls;
+					for (int i = 0; i < chainedTbls.size(); i++) {
+						chainedTbls.get(i).updateBorder(UITable.bdr_OutsideBusy);
+					}
 				} else {
 					selectedTable.updateBorder(UITable.bdr_OutsideFree);
 				}
 				selectedTable = getTblFromID(id);
 				if (selectedTable.occupied) {
-					selectedTable.updateBorder(UITable.bdr_BusySelected);
+					List<UITable> chainedTbls = getTblFromID(id).chainedTbls;
+					for (int i = 0; i < chainedTbls.size(); i++) {
+						chainedTbls.get(i).updateBorder(UITable.bdr_BusySelected);
+					}
 				} else {
 					selectedTable.updateBorder(UITable.bdr_FreeSelected);
 				}

@@ -1,6 +1,8 @@
 package com.restaurant.cashier;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,6 +71,22 @@ public class CashierEventListener implements ActionListener {
 		switch(e.getActionCommand()) {
 		case "btn_OccupyTable":
 			mng_OccupyTbl.updateValues();
+			if (mng_OccupyTbl.nOfCustomers > CashierEnv.MAX_SITS) {
+				String tblSits 	= Integer.toString(mng_OccupyTbl.nOfCustomers);
+				StringBuilder str = new StringBuilder();
+				for (int i = 0; i < mng_OccupyTbl.occupiedTables.size(); i++) {
+					str.append(mng_OccupyTbl.occupiedTables.get(i).tableID);
+					if (i + 1 < mng_OccupyTbl.occupiedTables.size()) {
+						str.append(", ");
+					}
+				}
+				Logger.Log(TypeLog.tl_Info, "Occupati tavoli " + str + " per " + tblSits + " persone");
+			} else {
+				String tblSits 	= Integer.toString(mng_OccupyTbl.nOfCustomers);
+				String tblID 	= mng_OccupyTbl.occupiedTables.get(0).tableID;
+				String perStr	= mng_OccupyTbl.nOfCustomers > 1 ? " persone" : " persona";
+				Logger.Log(TypeLog.tl_Info, "Occupato tavolo " + tblID + " per " + tblSits + perStr);
+			}	
 			break;
 		default:
 			break;
@@ -77,6 +95,10 @@ public class CashierEventListener implements ActionListener {
 	
 
 	static class mng_OccupyTbl {
+		/*ID_Table;NofPeople;Hrs*/
+		private static List<UITable>	occupiedTables;
+		private static int				nOfCustomers;
+		private static Date				occupyDatetime;
 		
 		private static void sortTmpTbl(List<UITable> list) {
 			boolean loopAgain = false;
@@ -99,16 +121,18 @@ public class CashierEventListener implements ActionListener {
 				}
 			}
 		}
-		/*ID_Table;NofPeople;Hrs*/
+		
 		public static void updateValues() {
 			db_SetNumberCustomers db = new db_SetNumberCustomers(CashierEnv.ci.frame);
 			int res = db.show();
 			if (res == JOptionPane.OK_OPTION) {
+				nOfCustomers = db.cb_NCustomers.getSelectedIndex() + 1;
+				occupyDatetime = Calendar.getInstance().getTime();
 				List<UITable> tmpList = new ArrayList<>();
-				if (db.cb_NCustomers.getSelectedIndex() <= CashierEnv.MAX_SITS) {
+				if (db.cb_NCustomers.getSelectedIndex() + 1 <= CashierEnv.MAX_SITS) {
 					tmpList.add(db.chainedTbls.get(0));
 				} else {
-					int tmpVal = db.cb_NCustomers.getSelectedIndex() + 1;
+					int tmpVal = nOfCustomers;
 					int i = 0;
 					while (tmpVal >= 6) {
 						tmpList.add(db.chainedTbls.get(i));
@@ -120,10 +144,12 @@ public class CashierEventListener implements ActionListener {
 					}
 				}
 				sortTmpTbl(tmpList);
+				occupiedTables = tmpList;
+				
 				for (UITable tbl : tmpList) {
 					tbl.occupied = true;
-					tbl.mergedTbls = tmpList;
-					tbl.updateBorder(UITable.bdr_OutsideBusy);	
+					tbl.chainedTbls = tmpList;
+					tbl.updateBorder(UITable.bdr_OutsideBusy);
 					if (tmpList.indexOf(tbl) < tmpList.size() - 1) {
 						tbl.addMergeArrow();
 					}

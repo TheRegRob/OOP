@@ -24,7 +24,7 @@ public class UITable {
 	public String			tableID;
 	public int				nOfCustomers;
 	public Date				occupyTime;
-	public List<UITable>	mergedTbls;
+	public List<UITable>	chainedTbls;
 	public UITable			sx_NextTbl;
 	public UITable			dx_NextTbl;
 	public ArrowChain		arrow;
@@ -54,7 +54,7 @@ public class UITable {
 		pnlDest = dest;
 		nOfSits = n_seats;
 		tableID = id;
-		mergedTbls = null;
+		chainedTbls = null;
 		dx_NextTbl = null;
 		int i = Character.getNumericValue(id.charAt(0) - 1);
 		int j = CashierEnv.ci.columnIDs.indexOf(id.charAt(1));
@@ -109,7 +109,9 @@ public class UITable {
 		public void mouseEntered(MouseEvent e) {
 			if (CashierEnv.selectedTable == null || tableID != CashierEnv.selectedTable.tableID) {
 				if (occupied) {
-					updateBorder(bdr_AboveBusy);
+					for (int i = 0; i < chainedTbls.size(); i++) {
+						chainedTbls.get(i).updateBorder(bdr_AboveBusy);
+					}
 				} else {
 					updateBorder(bdr_AboveFree);
 				}
@@ -122,6 +124,9 @@ public class UITable {
 			if (CashierEnv.selectedTable == null || tableID != CashierEnv.selectedTable.tableID) {
 				if (occupied) {
 					updateBorder(bdr_OutsideBusy);
+					for (int i = 0; i < chainedTbls.size(); i++) {
+						chainedTbls.get(i).updateBorder(bdr_OutsideBusy);
+					}
 				} else {
 					updateBorder(bdr_OutsideFree);
 				}
