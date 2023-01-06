@@ -192,7 +192,6 @@ public class CashierEventListener implements ActionListener {
 		}
 		public static void logEvents() {
 			if (nOfCustomers > CashierEnv.MAX_SITS) {
-				String tblSits 	= Integer.toString(nOfCustomers);
 				StringBuilder str = new StringBuilder();
 				for (int i = 0; i < occupiedTables.size(); i++) {
 					str.append(occupiedTables.get(i).tableID);
@@ -202,9 +201,7 @@ public class CashierEventListener implements ActionListener {
 				}
 				Logger.Log(TypeLog.tl_Info, "Liberati tavoli " + str);
 			} else {
-				String tblSits 	= Integer.toString(mng_OccupyTbl.nOfCustomers);
 				String tblID 	= mng_OccupyTbl.occupiedTables.get(0).tableID;
-				String perStr	= mng_OccupyTbl.nOfCustomers > 1 ? " persone" : " persona";
 				Logger.Log(TypeLog.tl_Info, "Liberato tavolo " + tblID);
 			}	
 		}
