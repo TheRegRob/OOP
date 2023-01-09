@@ -29,7 +29,7 @@ public class CashierEnv{
 		if (selectedTable == null) {
 			selectedTable = getTblFromID(id);
 			if (selectedTable.occupied) {
-				List<UITable> chainedTbls = getTblFromID(id).chainedTbls;
+				List<UITable> chainedTbls = selectedTable.chainedTbls;
 				for (int i = 0; i < chainedTbls.size(); i++) {
 					chainedTbls.get(i).updateBorder(UITable.bdr_BusySelected);
 				}
@@ -37,10 +37,9 @@ public class CashierEnv{
 				selectedTable.updateBorder(UITable.bdr_FreeSelected);
 			}	
 		} else {
-			
 			if (selectedTable.tableID == id) {
 				if (selectedTable.occupied) {
-					List<UITable> chainedTbls = getTblFromID(id).chainedTbls;
+					List<UITable> chainedTbls = selectedTable.chainedTbls;
 					for (int i = 0; i < chainedTbls.size(); i++) {
 						chainedTbls.get(i).updateBorder(UITable.bdr_AboveBusy);
 					}
@@ -50,7 +49,7 @@ public class CashierEnv{
 				selectedTable = null;
 			} else {
 				if (selectedTable.occupied) {
-					List<UITable> chainedTbls = getTblFromID(id).chainedTbls;
+					List<UITable> chainedTbls = selectedTable.chainedTbls;
 					for (int i = 0; i < chainedTbls.size(); i++) {
 						chainedTbls.get(i).updateBorder(UITable.bdr_OutsideBusy);
 					}
@@ -59,7 +58,7 @@ public class CashierEnv{
 				}
 				selectedTable = getTblFromID(id);
 				if (selectedTable.occupied) {
-					List<UITable> chainedTbls = getTblFromID(id).chainedTbls;
+					List<UITable> chainedTbls = selectedTable.chainedTbls;
 					for (int i = 0; i < chainedTbls.size(); i++) {
 						chainedTbls.get(i).updateBorder(UITable.bdr_BusySelected);
 					}

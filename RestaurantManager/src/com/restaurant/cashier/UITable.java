@@ -22,6 +22,8 @@ public class UITable {
 	public boolean			booked;
 	public int				nOfSits;
 	public String			tableID;
+	public double			bill;
+	public double			totalPayed;
 	public int				nOfCustomers;
 	public Date				occupyTime;
 	public List<UITable>	chainedTbls;
@@ -56,6 +58,8 @@ public class UITable {
 		tableID = id;
 		chainedTbls = null;
 		dx_NextTbl = null;
+		bill = 0;
+		totalPayed  = 0;
 		int i = Character.getNumericValue(id.charAt(0) - 1);
 		int j = CashierEnv.ci.columnIDs.indexOf(id.charAt(1));
 		if (CashierEnv.ci.tables[i][j] != CashierEnv.ci.tables[i][0]) {

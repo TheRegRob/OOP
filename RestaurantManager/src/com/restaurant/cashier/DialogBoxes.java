@@ -1,5 +1,6 @@
 package com.restaurant.cashier;
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,10 +9,13 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
 
 public class DialogBoxes {
 	
-	public static class db_SetNumberCustomers {
+	public class db_SetNumberCustomers {
 		JFrame frm;
 		String db_Title = "Numero clienti";
 		String db_Caption = "Seleziona il numero di clienti al tavolo";
@@ -72,6 +76,60 @@ public class DialogBoxes {
 			}
 		}
 		
+	}
+	
+	public class db_PayTableBill {
+		JFrame frm;
+		List<UITable> payingTbls;
+		public JComboBox<Integer> cb_PayedBills;
+		String db_Title = "Pagamento conto";
+		
+		public db_PayTableBill(JFrame frame, List<UITable> chainedTbls) {
+			this.frm = frame;
+			this.payingTbls = chainedTbls;
+		}
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		public int show() {
+			String[] columnNames = {
+					"Persone al tavolo",
+					"Costo a persona",
+					"Pagamenti saldati",
+					"Totale pagato"
+			};
+			UITable tbl = payingTbls.get(0);
+			double	quoteBill =  tbl.bill / tbl.nOfCustomers;
+			int 	payedQuotes = (int)(tbl.totalPayed / quoteBill);
+			//Object[][] data = {{"8", "40", "3", "120/320"}};
+			Object[][] data = {{Integer.toString(tbl.nOfCustomers), 
+				Double.toString(quoteBill), 
+				Integer.toString(payedQuotes), 
+				Double.toString(tbl.totalPayed) + "/" + Double.toString(tbl.bill)}};
+			List<Integer> elems = new ArrayList<Integer>();
+			for (int i = 0; i < payingTbls.get(0).nOfCustomers - payedQuotes; i++) {
+				elems.add(i + 1);
+			}
+			cb_PayedBills = new JComboBox(elems.toArray());
+			JTable table = new JTable(data, columnNames);
+			table.setPreferredSize(new Dimension(550, 25));
+			table.setRowSelectionAllowed(false);
+			table.getTableHeader().setReorderingAllowed(false);
+			table.setDefaultEditor(Object.class, null);
+			table.setPreferredScrollableViewportSize(table.getPreferredSize());
+			JScrollPane sp = new JScrollPane(table);
+			BorderLayout layout = new BorderLayout();
+			JPanel container = new JPanel(layout);
+			container.add(sp, BorderLayout.NORTH);
+			JPanel centerPnl = new JPanel(new BorderLayout(5, 5));
+			JLabel lbl_SumTb = new JLabel("Aggiungi pagamento quote");
+			centerPnl.add(lbl_SumTb, BorderLayout.WEST);
+			centerPnl.add(cb_PayedBills, BorderLayout.CENTER);
+			container.add(centerPnl);
+			Object[] options = new Object[] {"Conferma", "Annulla"};
+			int result = JOptionPane.showOptionDialog(frm, container, db_Title, 
+					JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, 
+					null, options, 0);
+			return result;
+		}
 	}
 
 }

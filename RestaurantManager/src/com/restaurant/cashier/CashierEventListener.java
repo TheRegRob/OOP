@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.swing.JOptionPane;
 
+import com.restaurant.cashier.DialogBoxes.db_PayTableBill;
 import com.restaurant.cashier.DialogBoxes.db_SetNumberCustomers;
 import com.restaurant.utils.Logger;
 import com.restaurant.utils.Logger.TypeLog;
@@ -71,11 +72,12 @@ public class CashierEventListener implements ActionListener {
 		switch(e.getActionCommand()) {
 		case "btn_OccupyTable":
 			mng_OccupyTbl.updateValues();
-			mng_OccupyTbl.logEvents();
 			break;
 		case "btn_ClearTable":
 			mng_ClearTbl.clearTable();
-			mng_ClearTbl.logEvents();
+			break;
+		case "btn_PayBill":
+			mng_PayBill.updatePayment();
 			break;
 		default:
 			break;
@@ -112,24 +114,25 @@ public class CashierEventListener implements ActionListener {
 		}
 		
 		public static void updateValues() {
-			db_SetNumberCustomers db = new db_SetNumberCustomers(CashierEnv.ci.frame);
-			int res = db.show();
+			DialogBoxes db = new DialogBoxes();
+			db_SetNumberCustomers db_SetSetCust = db.new db_SetNumberCustomers(CashierEnv.ci.frame);
+			int res = db_SetSetCust.show();
 			if (res == JOptionPane.OK_OPTION) {
-				nOfCustomers = db.cb_NCustomers.getSelectedIndex() + 1;
+				nOfCustomers = db_SetSetCust.cb_NCustomers.getSelectedIndex() + 1;
 				occupyDatetime = Calendar.getInstance().getTime();
 				List<UITable> tmpList = new ArrayList<>();
-				if (db.cb_NCustomers.getSelectedIndex() + 1 <= CashierEnv.MAX_SITS) {
-					tmpList.add(db.chainedTbls.get(0));
+				if (db_SetSetCust.cb_NCustomers.getSelectedIndex() + 1 <= CashierEnv.MAX_SITS) {
+					tmpList.add(db_SetSetCust.chainedTbls.get(0));
 				} else {
 					int tmpVal = nOfCustomers;
 					int i = 0;
 					while (tmpVal >= 6) {
-						tmpList.add(db.chainedTbls.get(i));
+						tmpList.add(db_SetSetCust.chainedTbls.get(i));
 						i++;
 						tmpVal -= 6;
 					}
 					if (tmpVal > 0) {
-						tmpList.add(db.chainedTbls.get(i));
+						tmpList.add(db_SetSetCust.chainedTbls.get(i));
 					}
 				}
 				sortTmpTbl(tmpList);
@@ -147,6 +150,7 @@ public class CashierEventListener implements ActionListener {
 				}
 				CashierEnv.selectedTable.occupied = true;
 				CashierEnv.clearSelection();
+				logEvents();
 			}
 		}
 	
@@ -189,6 +193,7 @@ public class CashierEventListener implements ActionListener {
 			}
 			CashierEnv.selectedTable.chainedTbls = null;
 			CashierEnv.clearSelection();
+			logEvents();
 		}
 		public static void logEvents() {
 			if (nOfCustomers > CashierEnv.MAX_SITS) {
@@ -203,13 +208,18 @@ public class CashierEventListener implements ActionListener {
 			} else {
 				String tblID 	= mng_OccupyTbl.occupiedTables.get(0).tableID;
 				Logger.Log(TypeLog.tl_Info, "Liberato tavolo " + tblID);
-			}	
+			}
 		}
 		
 	}
 	
 	static class mng_PayBill {
 		/* ID_Table */
+		public static void updatePayment() {
+			DialogBoxes db = new DialogBoxes();
+			db_PayTableBill db_PayBill = db.new db_PayTableBill(CashierEnv.ci.frame, CashierEnv.selectedTable.chainedTbls);
+			int res = db_PayBill.show();
+		}
 	}
 	
 	static class mng_OrderReceived {
