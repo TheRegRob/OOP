@@ -22,6 +22,7 @@ import javax.swing.JTree;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
+import javax.swing.tree.DefaultMutableTreeNode;
 
 import com.restaurant.utils.Logger;
 import com.restaurant.utils.Logger.TypeLog;
@@ -43,6 +44,7 @@ public class CashierImpl {
 	public JButton		btn_FreeTable;
 	public JButton		btn_PayBill;
 	public JPanel		pnl_Tables;
+	public TreeTables tblTree = new TreeTables(); 
 	
 	public void show() {
 		this.frame.setVisible(true);
@@ -70,11 +72,12 @@ public class CashierImpl {
 		setupAreaTable(4, 4, pnl_Tables);
 		pnl_Center.add(pnl_Tables, BorderLayout.CENTER);
 		pnl_Right.add(tb_Log, BorderLayout.CENTER);
-		JTree tv_TreeOrders = setupTreeView();
-		pnl_Left.add(tv_TreeOrders, BorderLayout.CENTER);
-		container.add(pnl_Left, setConstraints(0, 0, GridBagConstraints.HORIZONTAL, 0.4, new Insets(0, 10, 0, 0), 450));
-		container.add(pnl_Center, setConstraints(1, 0, GridBagConstraints.HORIZONTAL, 0.4, new Insets(0, 10, 0, 0), 420));
-		container.add(pnl_Right, setConstraints(2, 0, GridBagConstraints.HORIZONTAL, 0.7, new Insets(0, 10, 0, 10), 430));
+		//populateTree(tblTree);
+		pnl_Left.add(tblTree, BorderLayout.CENTER);
+		
+		container.add(pnl_Left, setConstraints(0, 0, GridBagConstraints.HORIZONTAL, 0.4, new Insets(0, 10, 0, 0), 420));
+		container.add(pnl_Center, setConstraints(1, 0, GridBagConstraints.HORIZONTAL, 0.4, new Insets(0, 10, 0, 0), 410));
+		container.add(pnl_Right, setConstraints(2, 0, GridBagConstraints.HORIZONTAL, 0.7, new Insets(0, 10, 0, 10), 420));
 		frame.getContentPane().add(container);
 		this.frame.setResizable(false);
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -175,7 +178,6 @@ public class CashierImpl {
 		this.tb_Log = new JTextPane();
 		final JScrollPane scroll = new JScrollPane(tb_Log);
 		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-	    scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 	    scroll.setBorder(new LineBorder(Color.BLACK, 1, true));
 	    Logger.Log(TypeLog.tl_Info, "Restaurant Manager avviato");
 	    return scroll;
@@ -201,4 +203,18 @@ public class CashierImpl {
 		return gbc;
 	}
 	/* END - Layouts */
+	
+	  /*public void populateTree(TreeTables treePanel) {
+		    String p1Name = "Parent 1";
+		    String p2Name = "Parent 2";
+		    String c1Name = "Child 1";
+		    String c2Name = "Child 2";
+		    DefaultMutableTreeNode p1, p2;
+		    p1 = treePanel.addObject(null, p1Name);
+		    p2 = treePanel.addObject(null, p2Name);
+		    treePanel.addObject(p1, c1Name);
+		    treePanel.addObject(p1, c2Name);
+		    treePanel.addObject(p2, c1Name);
+		    treePanel.addObject(p2, c2Name);
+		  }*/
 }
