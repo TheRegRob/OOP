@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.JOptionPane;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
 
 import com.restaurant.cashier.DialogBoxes.db_PayTableBill;
 import com.restaurant.cashier.DialogBoxes.db_SetNumberCustomers;
@@ -146,6 +148,36 @@ public class CashierEventListener implements ActionListener {
 					tbl.updateBorder(UITable.bdr_OutsideBusy);
 					if (tmpList.indexOf(tbl) < tmpList.size() - 1) {
 						tbl.addMergeArrow();
+					}
+				}
+				TreePath tp = CashierEnv.ci.tblTree.searchTable(CashierEnv.selectedTable);
+				if (tp == null) {
+					CashierEnv.ci.tblTree.addObject(CashierEnv.ci.tblTree.rootNode, CashierEnv.selectedTable);
+					String strDish = new String();
+					for (int i = 0; i < 6; i++) {
+						switch(i) {
+						case 0:
+							strDish = "43";
+							break;
+						case 1:
+							strDish = "60";
+							break;
+						case 2:
+							strDish = "100";
+							break;
+						case 3:
+							strDish = "23/A";
+							break;
+						case 4:
+							strDish = "128";
+							break;
+						case 5:
+							strDish = "180A";
+							break;
+
+						}
+						TreePath tp2 = CashierEnv.ci.tblTree.searchTable(CashierEnv.selectedTable);
+						CashierEnv.ci.tblTree.addObject((DefaultMutableTreeNode)tp2.getLastPathComponent(), strDish);
 					}
 				}
 				CashierEnv.selectedTable.occupied = true;
