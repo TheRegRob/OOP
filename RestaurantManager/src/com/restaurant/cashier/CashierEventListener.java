@@ -91,7 +91,6 @@ public class CashierEventListener implements ActionListener {
 		/*ID_Table;NofPeople;Hrs*/
 		private static List<UITable>	occupiedTables;
 		private static int				nOfCustomers;
-		private static Date				occupyDatetime;
 		
 		private static void sortTmpTbl(List<UITable> list) {
 			boolean loopAgain = false;
@@ -121,7 +120,6 @@ public class CashierEventListener implements ActionListener {
 			int res = db_SetSetCust.show();
 			if (res == JOptionPane.OK_OPTION) {
 				nOfCustomers = db_SetSetCust.cb_NCustomers.getSelectedIndex() + 1;
-				occupyDatetime = Calendar.getInstance().getTime();
 				List<UITable> tmpList = new ArrayList<>();
 				if (db_SetSetCust.cb_NCustomers.getSelectedIndex() + 1 <= CashierEnv.MAX_SITS) {
 					tmpList.add(db_SetSetCust.chainedTbls.get(0));
@@ -251,6 +249,7 @@ public class CashierEventListener implements ActionListener {
 			DialogBoxes db = new DialogBoxes();
 			db_PayTableBill db_PayBill = db.new db_PayTableBill(CashierEnv.ci.frame, CashierEnv.selectedTable.chainedTbls);
 			int res = db_PayBill.show();
+			/* TODO: Completare */
 		}
 	}
 	

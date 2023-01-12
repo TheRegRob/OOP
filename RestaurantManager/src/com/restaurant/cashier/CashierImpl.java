@@ -22,7 +22,6 @@ import javax.swing.JTree;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
-import javax.swing.tree.DefaultMutableTreeNode;
 
 import com.restaurant.utils.Logger;
 import com.restaurant.utils.Logger.TypeLog;

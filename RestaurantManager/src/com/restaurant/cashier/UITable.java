@@ -25,7 +25,6 @@ public class UITable {
 	public double			bill;
 	public double			totalPayed;
 	public int				nOfCustomers;
-	public Date				occupyTime;
 	public List<UITable>	chainedTbls;
 	public UITable			sx_NextTbl;
 	public UITable			dx_NextTbl;
@@ -44,12 +43,12 @@ public class UITable {
 	public static Border bdr_BusySelected = BorderFactory.createLineBorder(Color.RED, 		3);
 	
 	
-	URL url = CashierEnv.class.getResource("/TableRestaurant.png");
+	URL url = CashierEnv.class.getResource("/UITable_Image.png");
 	ImageIcon tbImage = new ImageIcon(url);
 	public JLabel lbl_Tab = new JLabel();
 	
 	int width = 105;
-	int height = 56;
+	int height = 83;
 	
 	public UITable(Point loc, JPanel dest, int n_seats, String id) {
 		location = loc;
@@ -73,7 +72,7 @@ public class UITable {
     
 	public void addTable() {
 		listener = new TableListener();
-		lbl_Tab.setIcon(new ImageIcon(tbImage.getImage().getScaledInstance(75, 50, Image.SCALE_SMOOTH)));
+		lbl_Tab.setIcon(new ImageIcon(tbImage.getImage().getScaledInstance(100, 75, Image.SCALE_AREA_AVERAGING)));
 		lbl_Tab.setBorder(bdr_OutsideFree);
 		lbl_Tab.setHorizontalAlignment(SwingConstants.CENTER);
 		lbl_Tab.setBounds(location.x, location.y, width, height);
@@ -88,7 +87,6 @@ public class UITable {
 	public void addMergeArrow() {
 		arrow = new ArrowChain(this);
 	}
-	
 	
 	class TableListener implements MouseListener {
 

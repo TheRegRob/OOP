@@ -3,7 +3,6 @@ package com.restaurant.cashier;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.GridLayout;
-import java.awt.ScrollPane;
 import java.net.URL;
 import java.util.Enumeration;
 
@@ -15,7 +14,6 @@ import javax.swing.JTree;
 import javax.swing.border.LineBorder;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
-import javax.swing.event.TreeSelectionEvent;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
