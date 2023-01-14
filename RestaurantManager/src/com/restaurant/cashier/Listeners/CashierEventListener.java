@@ -1,8 +1,6 @@
-package com.restaurant.cashier;
+package com.restaurant.cashier.Listeners;
 import java.awt.event.*;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,8 +9,11 @@ import javax.swing.JOptionPane;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
+import com.restaurant.cashier.CashierApplication;
+import com.restaurant.cashier.DialogBoxes;
 import com.restaurant.cashier.DialogBoxes.db_PayTableBill;
 import com.restaurant.cashier.DialogBoxes.db_SetNumberCustomers;
+import com.restaurant.cashier.GUIElements.UITable;
 import com.restaurant.utils.Logger;
 import com.restaurant.utils.Logger.TypeLog;
 
@@ -96,8 +97,8 @@ public class CashierEventListener implements ActionListener {
 			boolean loopAgain = false;
 			for (UITable tbl : list) {
 				if (list.indexOf(tbl) < list.size() - 1) {
-					int posX_prev = CashierEnv.ci.columnIDs.indexOf(tbl.tableID.charAt(1));
-					int posX_next = CashierEnv.ci.columnIDs.indexOf(list.get(list.indexOf(tbl) + 1).tableID.charAt(1));
+					int posX_prev = CashierApplication.cashierInstance.getColumnIDs().indexOf(tbl.getTableID().charAt(1));
+					int posX_next = CashierApplication.cashierInstance.getColumnIDs().indexOf(list.get(list.indexOf(tbl) + 1).getTableID().charAt(1));
 					if (posX_prev > posX_next) {
 						UITable t1 = tbl;
 						UITable t2 = list.get(list.indexOf(tbl)+ 1);
@@ -116,12 +117,12 @@ public class CashierEventListener implements ActionListener {
 		
 		public static void updateValues() {
 			DialogBoxes db = new DialogBoxes();
-			db_SetNumberCustomers db_SetSetCust = db.new db_SetNumberCustomers(CashierEnv.ci.frame);
+			db_SetNumberCustomers db_SetSetCust = db.new db_SetNumberCustomers(CashierApplication.cashierInstance.getFrame());
 			int res = db_SetSetCust.show();
 			if (res == JOptionPane.OK_OPTION) {
 				nOfCustomers = db_SetSetCust.cb_NCustomers.getSelectedIndex() + 1;
 				List<UITable> tmpList = new ArrayList<>();
-				if (db_SetSetCust.cb_NCustomers.getSelectedIndex() + 1 <= CashierEnv.MAX_SITS) {
+				if (db_SetSetCust.cb_NCustomers.getSelectedIndex() + 1 <= CashierApplication.MAX_SITS) {
 					tmpList.add(db_SetSetCust.chainedTbls.get(0));
 				} else {
 					int tmpVal = nOfCustomers;
@@ -140,17 +141,17 @@ public class CashierEventListener implements ActionListener {
 				List<UITable> copyList = new ArrayList<>(tmpList);
 				
 				for (UITable tbl : tmpList) {
-					tbl.occupied = true;
-					tbl.nOfCustomers = nOfCustomers;
-					tbl.chainedTbls = copyList;
+					tbl.setOccupied(true);
+					tbl.setNofCustomers(nOfCustomers);
+					tbl.setChainedTbls(copyList);
 					tbl.updateBorder(UITable.bdr_OutsideBusy);
 					if (tmpList.indexOf(tbl) < tmpList.size() - 1) {
 						tbl.addMergeArrow();
 					}
 				}
-				TreePath tp = CashierEnv.ci.tblTree.searchTable(CashierEnv.selectedTable);
+				TreePath tp = CashierApplication.cashierInstance.getTblTree().searchTable(CashierApplication.selectedTable);
 				if (tp == null) {
-					CashierEnv.ci.tblTree.addObject(CashierEnv.ci.tblTree.rootNode, CashierEnv.selectedTable);
+					CashierApplication.cashierInstance.getTblTree().addObject(CashierApplication.cashierInstance.getTblTree().getRootNode(), CashierApplication.selectedTable);
 					String strDish = new String();
 					for (int i = 0; i < 6; i++) {
 						switch(i) {
@@ -174,22 +175,22 @@ public class CashierEventListener implements ActionListener {
 							break;
 
 						}
-						TreePath tp2 = CashierEnv.ci.tblTree.searchTable(CashierEnv.selectedTable);
-						CashierEnv.ci.tblTree.addObject((DefaultMutableTreeNode)tp2.getLastPathComponent(), strDish);
+						TreePath tp2 = CashierApplication.cashierInstance.getTblTree().searchTable(CashierApplication.selectedTable);
+						CashierApplication.cashierInstance.getTblTree().addObject((DefaultMutableTreeNode)tp2.getLastPathComponent(), strDish);
 					}
 				}
-				CashierEnv.selectedTable.occupied = true;
-				CashierEnv.clearSelection();
+				CashierApplication.selectedTable.setOccupied(true);
+				CashierApplication.clearSelection();
 				logEvents();
 			}
 		}
 	
 		public static void logEvents() {
-			if (nOfCustomers > CashierEnv.MAX_SITS) {
+			if (nOfCustomers > CashierApplication.MAX_SITS) {
 				String tblSits 	= Integer.toString(nOfCustomers);
 				StringBuilder str = new StringBuilder();
 				for (int i = 0; i < occupiedTables.size(); i++) {
-					str.append(occupiedTables.get(i).tableID);
+					str.append(occupiedTables.get(i).getTableID());
 					if (i + 1 < occupiedTables.size()) {
 						str.append(", ");
 					}
@@ -197,7 +198,7 @@ public class CashierEventListener implements ActionListener {
 				Logger.Log(TypeLog.tl_Info, "Occupati tavoli " + str + " per " + tblSits + " persone");
 			} else {
 				String tblSits 	= Integer.toString(mng_OccupyTbl.nOfCustomers);
-				String tblID 	= mng_OccupyTbl.occupiedTables.get(0).tableID;
+				String tblID 	= mng_OccupyTbl.occupiedTables.get(0).getTableID();
 				String perStr	= mng_OccupyTbl.nOfCustomers > 1 ? " persone" : " persona";
 				Logger.Log(TypeLog.tl_Info, "Occupato tavolo " + tblID + " per " + tblSits + perStr);
 			}	
@@ -210,33 +211,33 @@ public class CashierEventListener implements ActionListener {
 		private static List<UITable>	occupiedTables;
 		
 		public static void clearTable() {
-			nOfCustomers = CashierEnv.selectedTable.nOfCustomers;
-			occupiedTables = new ArrayList<>(CashierEnv.selectedTable.chainedTbls);
-			for (int i = 0; i < CashierEnv.selectedTable.chainedTbls.size(); i++) {
-				UITable tbl = CashierEnv.selectedTable.chainedTbls.get(i);
-				if (tbl.arrow != null) {
-					tbl.arrow.removeArrow();
+			nOfCustomers = CashierApplication.selectedTable.getNofCustomers();
+			occupiedTables = new ArrayList<>(CashierApplication.selectedTable.getChainedTbls());
+			for (int i = 0; i < CashierApplication.selectedTable.getChainedTbls().size(); i++) {
+				UITable tbl = CashierApplication.selectedTable.getChainedTbls().get(i);
+				if (tbl.getArrow() != null) {
+					tbl.getArrow().removeArrow();
 				}
-				tbl.occupied = false;
-				tbl.nOfCustomers = 0;
+				tbl.setOccupied(false);
+				tbl.setNofCustomers(0);
 				tbl.updateBorder(UITable.bdr_OutsideFree);
 			}
-			CashierEnv.selectedTable.chainedTbls = null;
-			CashierEnv.clearSelection();
+			CashierApplication.selectedTable.setChainedTbls(null);
+			CashierApplication.clearSelection();
 			logEvents();
 		}
 		public static void logEvents() {
-			if (nOfCustomers > CashierEnv.MAX_SITS) {
+			if (nOfCustomers > CashierApplication.MAX_SITS) {
 				StringBuilder str = new StringBuilder();
 				for (int i = 0; i < occupiedTables.size(); i++) {
-					str.append(occupiedTables.get(i).tableID);
+					str.append(occupiedTables.get(i).getTableID());
 					if (i + 1 < occupiedTables.size()) {
 						str.append(", ");
 					}
 				}
 				Logger.Log(TypeLog.tl_Info, "Liberati tavoli " + str);
 			} else {
-				String tblID 	= mng_OccupyTbl.occupiedTables.get(0).tableID;
+				String tblID 	= mng_OccupyTbl.occupiedTables.get(0).getTableID();
 				Logger.Log(TypeLog.tl_Info, "Liberato tavolo " + tblID);
 			}
 		}
@@ -247,7 +248,7 @@ public class CashierEventListener implements ActionListener {
 		/* ID_Table */
 		public static void updatePayment() {
 			DialogBoxes db = new DialogBoxes();
-			db_PayTableBill db_PayBill = db.new db_PayTableBill(CashierEnv.ci.frame, CashierEnv.selectedTable.chainedTbls);
+			db_PayTableBill db_PayBill = db.new db_PayTableBill(CashierApplication.cashierInstance.getFrame(), CashierApplication.selectedTable.getChainedTbls());
 			int res = db_PayBill.show();
 			/* TODO: Completare */
 		}

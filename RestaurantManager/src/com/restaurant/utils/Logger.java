@@ -11,7 +11,7 @@ import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
-import com.restaurant.cashier.CashierEnv;
+import com.restaurant.cashier.CashierApplication;
 
 public class Logger {
 	
@@ -47,8 +47,8 @@ public class Logger {
 	}
 	
 	private static void printText(String txt_message, Color color) {
-		StyledDocument doc = CashierEnv.ci.tb_Log.getStyledDocument();
-		Style style = CashierEnv.ci.tb_Log.addStyle("Color Style", null);
+		StyledDocument doc = CashierApplication.cashierInstance.getTb_Log().getStyledDocument();
+		Style style = CashierApplication.cashierInstance.getTb_Log().addStyle("Color Style", null);
 		StyleConstants.setForeground(style, color);
 		try {
 			doc.insertString(doc.getLength(), getTime() + " - " + txt_message + "\n", style);

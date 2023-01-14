@@ -12,6 +12,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
+import com.restaurant.cashier.GUIElements.UITable;
+
 public class DialogBoxes {
 	
 	public class db_SetNumberCustomers {
@@ -36,7 +38,7 @@ public class DialogBoxes {
 			topPnl.add(lbl, BorderLayout.NORTH);
 			JPanel centerPnl = new JPanel(new BorderLayout(5, 5));
 			List<Integer> elems = new ArrayList<Integer>();
-			int maxSits = getMaximumSits(CashierEnv.selectedTable);
+			int maxSits = getMaximumSits(CashierApplication.selectedTable);
 			for (int i = 1; i <= maxSits; i++) {
 				elems.add(i);
 			}
@@ -53,22 +55,22 @@ public class DialogBoxes {
 		private int getMaximumSits(UITable selectedTable) {
 			int chain;
 			chain = calculateChain(0, selectedTable, true);
-			chain = calculateChain(chain, selectedTable.sx_NextTbl, false);
-			return chain * CashierEnv.MAX_SITS;
+			chain = calculateChain(chain, selectedTable.getSx_NextTbl(), false);
+			return chain * CashierApplication.MAX_SITS;
 			
 		}
 		
 		private int calculateChain(int chainSeq, UITable currTbl, boolean dirDx) {
 			int chain = chainSeq;
-			if (currTbl == null || currTbl.occupied) {
+			if (currTbl == null || currTbl.isOccupied()) {
 				return chainSeq;
 			} else {
 				chain++;
 				chainedTbls.add(currTbl);
 				if (dirDx) {
-					chain = calculateChain(chain, currTbl.dx_NextTbl, dirDx);
+					chain = calculateChain(chain, currTbl.getDx_NextTbl(), dirDx);
 				} else {
-					chain = calculateChain(chain, currTbl.sx_NextTbl, dirDx);
+					chain = calculateChain(chain, currTbl.getSx_NextTbl(), dirDx);
 				}
 				
 				return chain;
@@ -96,15 +98,15 @@ public class DialogBoxes {
 					"Totale pagato"
 			};
 			UITable tbl = payingTbls.get(0);
-			double	quoteBill =  tbl.bill / tbl.nOfCustomers;
-			int 	payedQuotes = (int)(tbl.totalPayed / quoteBill);
+			double	quoteBill =  tbl.getBill() / tbl.getNofCustomers();
+			int 	payedQuotes = (int)(tbl.getTotalPayed() / quoteBill);
 			//Object[][] data = {{"8", "40", "3", "120/320"}};
-			Object[][] data = {{Integer.toString(tbl.nOfCustomers), 
+			Object[][] data = {{Integer.toString(tbl.getNofCustomers()), 
 				Double.toString(quoteBill), 
 				Integer.toString(payedQuotes), 
-				Double.toString(tbl.totalPayed) + "/" + Double.toString(tbl.bill)}};
+				Double.toString(tbl.getTotalPayed()) + "/" + Double.toString(tbl.getBill())}};
 			List<Integer> elems = new ArrayList<Integer>();
-			for (int i = 0; i < payingTbls.get(0).nOfCustomers - payedQuotes; i++) {
+			for (int i = 0; i < payingTbls.get(0).getNofCustomers() - payedQuotes; i++) {
 				elems.add(i + 1);
 			}
 			cb_PayedBills = new JComboBox(elems.toArray());

@@ -1,4 +1,4 @@
-package com.restaurant.cashier;
+package com.restaurant.cashier.GUIElements;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -23,23 +23,25 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
+import com.restaurant.cashier.CashierApplication;
+
 @SuppressWarnings("serial")
-public class TreeTables extends JPanel {
-	DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("Ordini");
-	DefaultTreeModel treeModel = new DefaultTreeModel(rootNode);
+public class UITreeView extends JPanel {
+	private DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("Ordini");
+	DefaultTreeModel treeModel = new DefaultTreeModel(getRootNode());
 	TreeCellRenderer tcr;
 	JTree tree;
 	
-	public TreeTables() {
+	public UITreeView() {
 		super (new GridLayout(1, 0));
 		treeModel.addTreeModelListener(new TTModelListener());
 		tree = new JTree(treeModel);
 		tree.setEditable(true);
 		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 		tree.setShowsRootHandles(true);
-		URL url_tblIcon = CashierEnv.class.getResource("/Table_Icon.png");
+		URL url_tblIcon = CashierApplication.class.getResource("/Table_Icon.png");
 		ImageIcon tableIcon = new ImageIcon(url_tblIcon);
-		URL url_dishIcon = CashierEnv.class.getResource("/Dish_Icon.png");
+		URL url_dishIcon = CashierApplication.class.getResource("/Dish_Icon.png");
 		ImageIcon dishIcon = new ImageIcon(url_dishIcon);
 	    if (tableIcon != null && dishIcon != null) {
 	    	OrderRender render = new OrderRender(tableIcon, dishIcon);
@@ -51,7 +53,7 @@ public class TreeTables extends JPanel {
 	}
 	
 	public void clear() {
-		rootNode.removeAllChildren();
+		getRootNode().removeAllChildren();
 		treeModel.reload();
 	}
 	
@@ -69,7 +71,7 @@ public class TreeTables extends JPanel {
 	
 	public TreePath searchTable(UITable table) {
 		String nodeID = getNodeID(table);
-		Enumeration<TreeNode> e = rootNode.depthFirstEnumeration();
+		Enumeration<TreeNode> e = getRootNode().depthFirstEnumeration();
 		while(e.hasMoreElements()) {
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.nextElement();
 			if (node.toString().equalsIgnoreCase(nodeID)) {
@@ -102,7 +104,7 @@ public class TreeTables extends JPanel {
 			nNode = new DefaultMutableTreeNode(child);
 		}
 		if (parent == null) {
-			parent = rootNode;
+			parent = getRootNode();
 		} 
 		treeModel.insertNodeInto(nNode, parent, parent.getChildCount());
 		if (visible) {
@@ -114,11 +116,19 @@ public class TreeTables extends JPanel {
 	
 	private String getNodeID(UITable table) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("Tavolo " + table.tableID.charAt(0));
-		for(int i = 0; i < table.chainedTbls.size(); i++) {
-			sb.append(table.chainedTbls.get(i).tableID.charAt(1));
+		sb.append("Tavolo " + table.getTableID().charAt(0));
+		for(int i = 0; i < table.getChainedTbls().size(); i++) {
+			sb.append(table.getChainedTbls().get(i).getTableID().charAt(1));
 		}
 		return sb.toString();
+	}
+
+	public DefaultMutableTreeNode getRootNode() {
+		return rootNode;
+	}
+
+	public void setRootNode(DefaultMutableTreeNode rootNode) {
+		this.rootNode = rootNode;
 	}
 }
 
