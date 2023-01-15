@@ -1,6 +1,7 @@
 plugins {
     // Apply the java plugin to add support for Java
     java
+    eclipse
 
     // Apply the application plugin to add support for building a CLI application
     // You can run your app via task "run": ./gradlew run
@@ -22,7 +23,6 @@ repositories { // Where to search for dependencies
 dependencies {
     // Suppressions for SpotBugs
     compileOnly("com.github.spotbugs:spotbugs-annotations:4.7.3")
-
     // Maven dependencies are composed by a group name, a name and a version, separated by colons
     implementation("com.omertron:API-OMDB:1.5")
     implementation("org.jooq:jool:0.9.14")
@@ -45,7 +45,7 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClass.set("it.unibo.sampleapp.RateAMovie")
+    mainClass.set("com.restaurant.cashier.CashierApplication")
 }
 
 tasks.test {
@@ -53,5 +53,5 @@ tasks.test {
     testLogging {
         events(*org.gradle.api.tasks.testing.logging.TestLogEvent.values())
         showStandardStreams = true
-    }
+    }    
 }
