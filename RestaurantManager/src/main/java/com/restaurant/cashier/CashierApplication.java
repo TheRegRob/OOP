@@ -10,31 +10,47 @@ import com.restaurant.cashier.GUIElements.UITable;
  * Class to instantiate the application GUI and its components
  *
  **/
-public class CashierApplication {
-	public static final	int MAX_SITS = 6;
-	public static UITable selectedTable = null;
-	public final static CashierGUI cashierInstance = new CashierGUI();	
+public final class CashierApplication {
+	private final static int MAX_SITS = 6;
+	private final static CashierGUI CASHIER_INSTANCE = new CashierGUI();
+	private static UITable selectedTable;
+	
+	private CashierApplication() {
+		setSelectedTable(null);
+	}
+	public static CashierGUI getCashierInstance() {
+		return CASHIER_INSTANCE;
+	}
+	public static void setSelectedTable(final UITable selectedTable) {
+		CashierApplication.selectedTable = selectedTable;
+	}
+	public static UITable getSelectedTable() {
+		return selectedTable;
+	}
+	public static int getMaxSits() {
+		return MAX_SITS;
+	}
 	/**
 	 * Main method of the cashier application. It creates a CashierGUI variable 
 	 * that fill with it's components
 	 * @param args The command line arguments
 	 **/
-	public static void main(String args[]){
-			cashierInstance.setAppIcon();   
-			cashierInstance.setDimensions(950, 500);
-			cashierInstance.setupComponents();
-			cashierInstance.show();
+	public static void main(final String args[]){
+			getCashierInstance().setAppIcon();   
+			getCashierInstance().setDimensions(950, 500);
+			getCashierInstance().setupComponents();
+			getCashierInstance().show();
 	    }
 	/**
 	 * Function that is called when a clear of the table selection is needed
 	 **/
 	public static void clearSelection() {
-		if (selectedTable.isOccupied()) {
-			selectedTable.updateBorder(UITable.bdr_OutsideBusy);
+		if (getSelectedTable().isOccupied()) {
+			getSelectedTable().updateBorder(UITable.bdr_OutsideBusy);
 			} else {
-			selectedTable.updateBorder(UITable.bdr_OutsideFree);
+			getSelectedTable().updateBorder(UITable.bdr_OutsideFree);
 			}
-		selectedTable = null;
+		setSelectedTable(null);
 	}
 	/**
 	 * Function that based on the flags of the tables, sets it in the
@@ -42,49 +58,49 @@ public class CashierApplication {
 	 * thicker border if selected and so on).
 	 * @param id | String - Its the identifier of the table.
 	 **/
-	public static void toggleTableStatus(String id) {
-		if (selectedTable == null) {
-			selectedTable = getTblFromID(id);
-			if (selectedTable.isOccupied()) {
-				List<UITable> chainedTbls = selectedTable.getChainedTbls();
-				for (int i = 0; i < chainedTbls.size(); i++) {
-					chainedTbls.get(i).updateBorder(UITable.bdr_BusySelected);
+	public static void toggleTableStatus(final String id) {
+		if (getSelectedTable() == null) {
+			setSelectedTable(getTblFromID(id));
+			if (getSelectedTable().isOccupied()) {
+				final List<UITable> chainedTbls = getSelectedTable().getChainedTbls();
+				for (final UITable tbl : chainedTbls) {
+					tbl.updateBorder(UITable.bdr_BusySelected);
 				}
 			} else {
-				selectedTable.updateBorder(UITable.bdr_FreeSelected);
+				getSelectedTable().updateBorder(UITable.bdr_FreeSelected);
 			}	
 		} else {
-			if (selectedTable.getTableID() == id) {
-				if (selectedTable.isOccupied()) {
-					List<UITable> chainedTbls = selectedTable.getChainedTbls();
-					for (int i = 0; i < chainedTbls.size(); i++) {
-						chainedTbls.get(i).updateBorder(UITable.bdr_AboveBusy);
+			if (getSelectedTable().getTableID().equals(id)) {
+				if (getSelectedTable().isOccupied()) {
+					final List<UITable> chainedTbls = getSelectedTable().getChainedTbls();
+					for (final UITable tbl : chainedTbls) {
+						tbl.updateBorder(UITable.bdr_AboveBusy);
 					}
 				} else {
-					selectedTable.updateBorder(UITable.bdr_AboveFree);
+					getSelectedTable().updateBorder(UITable.bdr_AboveFree);
 				}
-				selectedTable = null;
+				setSelectedTable(null);
 			} else {
-				if (selectedTable.isOccupied()) {
-					List<UITable> chainedTbls = selectedTable.getChainedTbls();
-					for (int i = 0; i < chainedTbls.size(); i++) {
-						chainedTbls.get(i).updateBorder(UITable.bdr_OutsideBusy);
+				if (getSelectedTable().isOccupied()) {
+					final List<UITable> chainedTbls = getSelectedTable().getChainedTbls();
+					for (final UITable tbl : chainedTbls) {
+						tbl.updateBorder(UITable.bdr_OutsideBusy);
 					}
 				} else {
-					selectedTable.updateBorder(UITable.bdr_OutsideFree);
+					getSelectedTable().updateBorder(UITable.bdr_OutsideFree);
 				}
-				selectedTable = getTblFromID(id);
-				if (selectedTable.isOccupied()) {
-					List<UITable> chainedTbls = selectedTable.getChainedTbls();
-					for (int i = 0; i < chainedTbls.size(); i++) {
-						chainedTbls.get(i).updateBorder(UITable.bdr_BusySelected);
+				setSelectedTable(getTblFromID(id));
+				if (getSelectedTable().isOccupied()) {
+					final List<UITable> chainedTbls = getSelectedTable().getChainedTbls();
+					for (final UITable tbl : chainedTbls) {
+						tbl.updateBorder(UITable.bdr_BusySelected);
 					}
 				} else {
-					selectedTable.updateBorder(UITable.bdr_FreeSelected);
+					getSelectedTable().updateBorder(UITable.bdr_FreeSelected);
 				}
 			}
 		}
-		updateBtnStatus(selectedTable);
+		updateBtnStatus(getSelectedTable());
 	}
 	/**
 	 * Function that retrieves the table element from the instance list
@@ -92,11 +108,10 @@ public class CashierApplication {
 	 * @param id | String - It's the identifier of the table
 	 * @return the UITable element referred to the identifier
 	 **/
-	public static UITable getTblFromID (String id) {
-		int i;
-		i = Character.getNumericValue(id.charAt(0) - 1);
-		int j = cashierInstance.getColumnIDs().indexOf(id.charAt(1));
-		return cashierInstance.getTables()[i][j];
+	public static UITable getTblFromID (final String id) {
+		final int i = Character.getNumericValue(id.charAt(0) - 1);
+		final int j = getCashierInstance().getColumnIDs().indexOf(id.charAt(1));
+		return getCashierInstance().getTables()[i][j];
 	}
 	/**
 	 * Function to update the button enabling status based on the selected
@@ -104,20 +119,20 @@ public class CashierApplication {
 	 * will become enabled and the other two will become disabled)
 	 * @param selectedTable
 	 */
-	public static void updateBtnStatus(UITable selectedTable) {
+	public static void updateBtnStatus(final UITable selectedTable) {
 		if (selectedTable == null) {
-			CashierApplication.cashierInstance.getBtn_OccupyTable().setEnabled(false);
-			CashierApplication.cashierInstance.getBtn_FreeTable().setEnabled(false);
-			CashierApplication.cashierInstance.getBtn_PayBill().setEnabled(false);
+			CashierApplication.getCashierInstance().getBtn_OccupyTable().setEnabled(false);
+			CashierApplication.getCashierInstance().getBtn_FreeTable().setEnabled(false);
+			CashierApplication.getCashierInstance().getBtn_PayBill().setEnabled(false);
 		} else {
 			if (selectedTable.isOccupied()) {
-				CashierApplication.cashierInstance.getBtn_OccupyTable().setEnabled(false);
-				CashierApplication.cashierInstance.getBtn_FreeTable().setEnabled(true);
-				CashierApplication.cashierInstance.getBtn_PayBill().setEnabled(true);
+				CashierApplication.getCashierInstance().getBtn_OccupyTable().setEnabled(false);
+				CashierApplication.getCashierInstance().getBtn_FreeTable().setEnabled(true);
+				CashierApplication.getCashierInstance().getBtn_PayBill().setEnabled(true);
 			} else {
-				CashierApplication.cashierInstance.getBtn_OccupyTable().setEnabled(true);
-				CashierApplication.cashierInstance.getBtn_FreeTable().setEnabled(false);
-				CashierApplication.cashierInstance.getBtn_PayBill().setEnabled(false);
+				CashierApplication.getCashierInstance().getBtn_OccupyTable().setEnabled(true);
+				CashierApplication.getCashierInstance().getBtn_FreeTable().setEnabled(false);
+				CashierApplication.getCashierInstance().getBtn_PayBill().setEnabled(false);
 			}
 		}
 	}

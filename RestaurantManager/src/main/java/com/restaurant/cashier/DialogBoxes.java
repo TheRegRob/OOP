@@ -16,57 +16,71 @@ import com.restaurant.cashier.GUIElements.UITable;
 
 public class DialogBoxes {
 	
-	public class db_SetNumberCustomers {
+	public class SetNumberCustomers {
 		JFrame frm;
-		String db_Title = "Numero clienti";
-		String db_Caption = "Seleziona il numero di clienti al tavolo";
-		public JComboBox<Integer> cb_NCustomers;
-		public List<UITable> chainedTbls;
+		final static String DB_TITLE = "Numero clienti";
+		final static String DB_CAPTION = "Seleziona il numero di clienti al tavolo";
+		private JComboBox<Integer> cbNCustomers;
+		private List<UITable> chainedTbls;
 		
 		
-		public db_SetNumberCustomers(JFrame frame) {
+		public SetNumberCustomers(final JFrame frame) {
 			// TODO Auto-generated constructor stub
 			this.frm = frame;
 		}
 		
-		@SuppressWarnings({ "rawtypes", "unchecked" })
+		public JComboBox<Integer> getCbNCustomers() {
+			return cbNCustomers;
+		}
+
+		public void setCbNCustomers(final JComboBox<Integer> cbNCustomers) {
+			this.cbNCustomers = cbNCustomers;
+		}
+
+		public List<UITable> getChainedTbls() {
+			return chainedTbls;
+		}
+
+		public void setChainedTbls(final List<UITable> chainedTbls) {
+			this.chainedTbls = chainedTbls;
+		}
+
 		public int show() {
-			chainedTbls = new ArrayList<>();
-			BorderLayout layout = new BorderLayout();
-			JPanel topPnl = new JPanel(layout);
-			JLabel lbl = new JLabel(db_Caption);
+			setChainedTbls(new ArrayList<>());
+			final BorderLayout layout = new BorderLayout();
+			final JPanel topPnl = new JPanel(layout);
+			final JLabel lbl = new JLabel(DB_CAPTION);
 			topPnl.add(lbl, BorderLayout.NORTH);
-			JPanel centerPnl = new JPanel(new BorderLayout(5, 5));
-			List<Integer> elems = new ArrayList<Integer>();
-			int maxSits = getMaximumSits(CashierApplication.selectedTable);
+			final JPanel centerPnl = new JPanel(new BorderLayout(5, 5));
+			final List<Integer> elems = new ArrayList<>();
+			final int maxSits = getMaximumSits(CashierApplication.getSelectedTable());
 			for (int i = 1; i <= maxSits; i++) {
 				elems.add(i);
 			}
-			cb_NCustomers = new JComboBox(elems.toArray());
-			centerPnl.add(cb_NCustomers, BorderLayout.CENTER);
+			setCbNCustomers(new JComboBox(elems.toArray()));
+			centerPnl.add(getCbNCustomers(), BorderLayout.CENTER);
 			topPnl.add(centerPnl);
-			Object[] options = new Object[] {"Conferma", "Annulla"};
-			int result = JOptionPane.showOptionDialog(frm, topPnl, db_Title, 
+			final Object[] options = {"Conferma", "Annulla"};
+			return 	JOptionPane.showOptionDialog(frm, topPnl, DB_TITLE, 
 					JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, 
 					null, options, 0);
-			return result;
 		}
 		
-		private int getMaximumSits(UITable selectedTable) {
+		private int getMaximumSits(final UITable selectedTable) {
 			int chain;
 			chain = calculateChain(0, selectedTable, true);
 			chain = calculateChain(chain, selectedTable.getSx_NextTbl(), false);
-			return chain * CashierApplication.MAX_SITS;
+			return chain * CashierApplication.getMaxSits();
 			
 		}
 		
-		private int calculateChain(int chainSeq, UITable currTbl, boolean dirDx) {
+		private int calculateChain(final int chainSeq, final UITable currTbl, final boolean dirDx) {
 			int chain = chainSeq;
 			if (currTbl == null || currTbl.isOccupied()) {
 				return chainSeq;
 			} else {
 				chain++;
-				chainedTbls.add(currTbl);
+				getChainedTbls().add(currTbl);
 				if (dirDx) {
 					chain = calculateChain(chain, currTbl.getDx_NextTbl(), dirDx);
 				} else {
@@ -79,57 +93,56 @@ public class DialogBoxes {
 		
 	}
 	
-	public class db_PayTableBill {
+	public class PayTableBill {
 		JFrame frm;
 		List<UITable> payingTbls;
-		public JComboBox<Integer> cb_PayedBills;
-		String db_Title = "Pagamento conto";
+		public JComboBox<Integer> cbPayedBills;
+		final static String DB_TITLE = "Pagamento conto";
 		
-		public db_PayTableBill(JFrame frame, List<UITable> chainedTbls) {
+		public PayTableBill(final JFrame frame, final List<UITable> chainedTbls) {
 			this.frm = frame;
 			this.payingTbls = chainedTbls;
 		}
-		@SuppressWarnings({ "rawtypes", "unchecked" })
+		
 		public int show() {
-			String[] columnNames = {
+			final String[] columnNames = {
 					"Persone al tavolo",
 					"Costo a persona",
 					"Pagamenti saldati",
 					"Totale pagato"
 			};
-			UITable tbl = payingTbls.get(0);
-			double	quoteBill =  tbl.getBill() / tbl.getNofCustomers();
-			int 	payedQuotes = (int)(tbl.getTotalPayed() / quoteBill);
+			final UITable tbl = payingTbls.get(0);
+			final double	quoteBill =  tbl.getBill() / tbl.getNofCustomers();
+			final int 	payedQuotes = (int)(tbl.getTotalPayed() / quoteBill);
 			//Object[][] data = {{"8", "40", "3", "120/320"}};
-			Object[][] data = {{Integer.toString(tbl.getNofCustomers()), 
+			final Object[][] data = {{Integer.toString(tbl.getNofCustomers()), 
 				Double.toString(quoteBill), 
 				Integer.toString(payedQuotes), 
 				Double.toString(tbl.getTotalPayed()) + "/" + Double.toString(tbl.getBill())}};
-			List<Integer> elems = new ArrayList<Integer>();
+			final List<Integer> elems = new ArrayList<>();
 			for (int i = 0; i < payingTbls.get(0).getNofCustomers() - payedQuotes; i++) {
 				elems.add(i + 1);
 			}
-			cb_PayedBills = new JComboBox(elems.toArray());
-			JTable table = new JTable(data, columnNames);
+			cbPayedBills = new JComboBox(elems.toArray());
+			final JTable table = new JTable(data, columnNames);
 			table.setPreferredSize(new Dimension(550, 25));
 			table.setRowSelectionAllowed(false);
 			table.getTableHeader().setReorderingAllowed(false);
 			table.setDefaultEditor(Object.class, null);
 			table.setPreferredScrollableViewportSize(table.getPreferredSize());
-			JScrollPane sp = new JScrollPane(table);
-			BorderLayout layout = new BorderLayout();
-			JPanel container = new JPanel(layout);
+			final JScrollPane sp = new JScrollPane(table);
+			final BorderLayout layout = new BorderLayout();
+			final JPanel container = new JPanel(layout);
 			container.add(sp, BorderLayout.NORTH);
-			JPanel centerPnl = new JPanel(new BorderLayout(5, 5));
-			JLabel lbl_SumTb = new JLabel("Aggiungi pagamento quote");
-			centerPnl.add(lbl_SumTb, BorderLayout.WEST);
-			centerPnl.add(cb_PayedBills, BorderLayout.CENTER);
+			final JPanel centerPnl = new JPanel(new BorderLayout(5, 5));
+			final JLabel lblSumTb = new JLabel("Aggiungi pagamento quote");
+			centerPnl.add(lblSumTb, BorderLayout.WEST);
+			centerPnl.add(cbPayedBills, BorderLayout.CENTER);
 			container.add(centerPnl);
-			Object[] options = new Object[] {"Conferma", "Annulla"};
-			int result = JOptionPane.showOptionDialog(frm, container, db_Title, 
+			final Object[] options = {"Conferma", "Annulla"};
+			return JOptionPane.showOptionDialog(frm, container, DB_TITLE, 
 					JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, 
 					null, options, 0);
-			return result;
 		}
 	}
 

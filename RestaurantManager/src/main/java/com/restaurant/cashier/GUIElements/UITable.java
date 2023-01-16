@@ -29,19 +29,19 @@ public class UITable {
 	private List<UITable>	chainedTbls;
 	private UITable			sx_NextTbl;
 	private UITable			dx_NextTbl;
-	private UIArrowChain		arrow;
+	private UIArrowChain	arrow;
 	
 	Point 					location;
 	JPanel 					pnlDest;
 	TableListener			listener;
 	
-	public static Border bdr_AboveFree 	= BorderFactory.createLineBorder(Color.GREEN, 		2);
+	public static Border bdr_AboveFree 		= BorderFactory.createLineBorder(Color.GREEN, 	2);
 	public static Border bdr_OutsideFree 	= BorderFactory.createLineBorder(Color.GREEN, 	1);
-	public static Border bdr_AboveBusy	= BorderFactory.createLineBorder(Color.RED, 		2);
+	public static Border bdr_AboveBusy		= BorderFactory.createLineBorder(Color.RED, 	2);
 	public static Border bdr_OutsideBusy 	= BorderFactory.createLineBorder(Color.RED, 	1);
 	
-	public static Border bdr_FreeSelected = BorderFactory.createLineBorder(Color.GREEN, 	3);
-	public static Border bdr_BusySelected = BorderFactory.createLineBorder(Color.RED, 		3);
+	public static Border bdr_FreeSelected 	= BorderFactory.createLineBorder(Color.GREEN, 	3);
+	public static Border bdr_BusySelected 	= BorderFactory.createLineBorder(Color.RED, 	3);
 	
 	
 	URL url = CashierApplication.class.getResource("/UITable_Image.png");
@@ -149,10 +149,10 @@ public class UITable {
 		setBill(0);
 		setTotalPayed(0);
 		int i = Character.getNumericValue(id.charAt(0) - 1);
-		int j = CashierApplication.cashierInstance.getColumnIDs().indexOf(id.charAt(1));
-		if (CashierApplication.cashierInstance.getTables()[i][j] != CashierApplication.cashierInstance.getTables()[i][0]) {
-			setSx_NextTbl(CashierApplication.cashierInstance.getTables()[i][j - 1]);
-			CashierApplication.cashierInstance.getTables()[i][j - 1].setDx_NextTbl(this);
+		int j = CashierApplication.getCashierInstance().getColumnIDs().indexOf(id.charAt(1));
+		if (CashierApplication.getCashierInstance().getTables()[i][j] != CashierApplication.getCashierInstance().getTables()[i][0]) {
+			setSx_NextTbl(CashierApplication.getCashierInstance().getTables()[i][j - 1]);
+			CashierApplication.getCashierInstance().getTables()[i][j - 1].setDx_NextTbl(this);
 		} else {
 			setSx_NextTbl(null);
 		}
@@ -198,7 +198,7 @@ public class UITable {
 
 		@Override
 		public void mouseEntered(MouseEvent e) {
-			if (CashierApplication.selectedTable == null || getTableID() != CashierApplication.selectedTable.getTableID()) {
+			if (CashierApplication.getSelectedTable() == null || getTableID() != CashierApplication.getSelectedTable().getTableID()) {
 				if (isOccupied()) {
 					for (int i = 0; i < getChainedTbls().size(); i++) {
 						getChainedTbls().get(i).updateBorder(bdr_AboveBusy);
@@ -212,7 +212,7 @@ public class UITable {
 
 		@Override
 		public void mouseExited(MouseEvent e) {
-			if (CashierApplication.selectedTable == null || getTableID() != CashierApplication.selectedTable.getTableID()) {
+			if (CashierApplication.getSelectedTable() == null || getTableID() != CashierApplication.getSelectedTable().getTableID()) {
 				if (isOccupied()) {
 					updateBorder(bdr_OutsideBusy);
 					for (int i = 0; i < getChainedTbls().size(); i++) {
