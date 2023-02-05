@@ -2,8 +2,8 @@ package com.restaurant.cashier;
 
 import java.util.List;
 
-import com.restaurant.cashier.GUIElements.CashierGUI;
-import com.restaurant.cashier.GUIElements.UITable;
+import com.restaurant.cashier.guielements.CashierGUI;
+import com.restaurant.cashier.guielements.UITable;
 /**
  * 
  * @author robin
@@ -46,9 +46,9 @@ public final class CashierApplication {
 	 **/
 	public static void clearSelection() {
 		if (getSelectedTable().isOccupied()) {
-			getSelectedTable().updateBorder(UITable.bdr_OutsideBusy);
+			getSelectedTable().updateBorder(UITable.BDR_OUTSIDE_BUSY);
 			} else {
-			getSelectedTable().updateBorder(UITable.bdr_OutsideFree);
+			getSelectedTable().updateBorder(UITable.BDR_OUTSIDE_FREE);
 			}
 		setSelectedTable(null);
 	}
@@ -64,39 +64,39 @@ public final class CashierApplication {
 			if (getSelectedTable().isOccupied()) {
 				final List<UITable> chainedTbls = getSelectedTable().getChainedTbls();
 				for (final UITable tbl : chainedTbls) {
-					tbl.updateBorder(UITable.bdr_BusySelected);
+					tbl.updateBorder(UITable.BDR_BUSY_SELECTED);
 				}
 			} else {
-				getSelectedTable().updateBorder(UITable.bdr_FreeSelected);
+				getSelectedTable().updateBorder(UITable.BDR_FREE_SELECTED);
 			}	
 		} else {
 			if (getSelectedTable().getTableID().equals(id)) {
 				if (getSelectedTable().isOccupied()) {
 					final List<UITable> chainedTbls = getSelectedTable().getChainedTbls();
 					for (final UITable tbl : chainedTbls) {
-						tbl.updateBorder(UITable.bdr_AboveBusy);
+						tbl.updateBorder(UITable.BDR_ABOVE_BUSY);
 					}
 				} else {
-					getSelectedTable().updateBorder(UITable.bdr_AboveFree);
+					getSelectedTable().updateBorder(UITable.BDR_ABOVE_FREE);
 				}
 				setSelectedTable(null);
 			} else {
 				if (getSelectedTable().isOccupied()) {
 					final List<UITable> chainedTbls = getSelectedTable().getChainedTbls();
 					for (final UITable tbl : chainedTbls) {
-						tbl.updateBorder(UITable.bdr_OutsideBusy);
+						tbl.updateBorder(UITable.BDR_OUTSIDE_BUSY);
 					}
 				} else {
-					getSelectedTable().updateBorder(UITable.bdr_OutsideFree);
+					getSelectedTable().updateBorder(UITable.BDR_OUTSIDE_FREE);
 				}
 				setSelectedTable(getTblFromID(id));
 				if (getSelectedTable().isOccupied()) {
 					final List<UITable> chainedTbls = getSelectedTable().getChainedTbls();
 					for (final UITable tbl : chainedTbls) {
-						tbl.updateBorder(UITable.bdr_BusySelected);
+						tbl.updateBorder(UITable.BDR_BUSY_SELECTED);
 					}
 				} else {
-					getSelectedTable().updateBorder(UITable.bdr_FreeSelected);
+					getSelectedTable().updateBorder(UITable.BDR_FREE_SELECTED);
 				}
 			}
 		}
@@ -121,18 +121,18 @@ public final class CashierApplication {
 	 */
 	public static void updateBtnStatus(final UITable selectedTable) {
 		if (selectedTable == null) {
-			CashierApplication.getCashierInstance().getBtn_OccupyTable().setEnabled(false);
-			CashierApplication.getCashierInstance().getBtn_FreeTable().setEnabled(false);
-			CashierApplication.getCashierInstance().getBtn_PayBill().setEnabled(false);
+			CashierApplication.getCashierInstance().getBtnOccupyTable().setEnabled(false);
+			CashierApplication.getCashierInstance().getBtnFreeTable().setEnabled(false);
+			CashierApplication.getCashierInstance().getBtnPayBill().setEnabled(false);
 		} else {
 			if (selectedTable.isOccupied()) {
-				CashierApplication.getCashierInstance().getBtn_OccupyTable().setEnabled(false);
-				CashierApplication.getCashierInstance().getBtn_FreeTable().setEnabled(true);
-				CashierApplication.getCashierInstance().getBtn_PayBill().setEnabled(true);
+				CashierApplication.getCashierInstance().getBtnOccupyTable().setEnabled(false);
+				CashierApplication.getCashierInstance().getBtnFreeTable().setEnabled(true);
+				CashierApplication.getCashierInstance().getBtnPayBill().setEnabled(true);
 			} else {
-				CashierApplication.getCashierInstance().getBtn_OccupyTable().setEnabled(true);
-				CashierApplication.getCashierInstance().getBtn_FreeTable().setEnabled(false);
-				CashierApplication.getCashierInstance().getBtn_PayBill().setEnabled(false);
+				CashierApplication.getCashierInstance().getBtnOccupyTable().setEnabled(true);
+				CashierApplication.getCashierInstance().getBtnFreeTable().setEnabled(false);
+				CashierApplication.getCashierInstance().getBtnPayBill().setEnabled(false);
 			}
 		}
 	}

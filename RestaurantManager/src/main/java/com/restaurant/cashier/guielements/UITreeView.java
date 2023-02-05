@@ -1,4 +1,4 @@
-package com.restaurant.cashier.GUIElements;
+package com.restaurant.cashier.guielements;
 
 import java.awt.Color;
 import java.awt.Component;

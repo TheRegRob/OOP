@@ -1,4 +1,4 @@
-package com.restaurant.cashier.GUIElements;
+package com.restaurant.cashier.guielements;
 
 import java.awt.Font;
 
@@ -7,17 +7,17 @@ import javax.swing.SwingConstants;
 
 public class UIArrowChain {
 	
-	private UITable tbl;
+	final private UITable tbl;
 	private JLabel	lbl;
 	
-	public UIArrowChain(UITable tbl) {
+	public UIArrowChain(final UITable tbl) {
 		this.tbl = tbl;
 		createArrow(tbl);
 	}
 	
-	public void createArrow(UITable tbl) {
-		int x = tbl.location.x + tbl.width - 8;
-		int y = tbl.location.y + tbl.height / 3;
+	public final void createArrow(final UITable tbl) {
+		final int x = tbl.location.x + tbl.width - 8;
+		final int y = tbl.location.y + tbl.height / 3;
 		this.lbl = new JLabel();
 		this.lbl.setText("⇄");
 		this.lbl.setFont(new Font("Calibri", Font.PLAIN, 24));

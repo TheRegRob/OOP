@@ -1,4 +1,4 @@
-package com.restaurant.cashier.Listeners;
+package com.restaurant.cashier.listeners;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,16 +13,16 @@ import com.restaurant.cashier.CashierApplication;
 import com.restaurant.cashier.DialogBoxes;
 import com.restaurant.cashier.DialogBoxes.PayTableBill;
 import com.restaurant.cashier.DialogBoxes.SetNumberCustomers;
-import com.restaurant.cashier.GUIElements.UITable;
+import com.restaurant.cashier.guielements.UITable;
 import com.restaurant.utils.Logger;
 import com.restaurant.utils.Logger.TypeLog;
 
 public class CashierEventListener implements ActionListener {
 	
-	String ev_Cmd;
+	String evCmd;
 	
 	
-	public static String[] eventList = { 
+	public static final String[] EVENT_LIST = { 
 			/* Cashier events */
 			"btn_OccupyTable",
 			"btn_ClearTable",
@@ -144,7 +144,7 @@ public class CashierEventListener implements ActionListener {
 					tbl.setOccupied(true);
 					tbl.setNofCustomers(nOfCustomers);
 					tbl.setChainedTbls(copyList);
-					tbl.updateBorder(UITable.bdr_OutsideBusy);
+					tbl.updateBorder(UITable.BDR_OUTSIDE_BUSY);
 					if (tmpList.indexOf(tbl) < tmpList.size() - 1) {
 						tbl.addMergeArrow();
 					}
@@ -220,7 +220,7 @@ public class CashierEventListener implements ActionListener {
 				}
 				tbl.setOccupied(false);
 				tbl.setNofCustomers(0);
-				tbl.updateBorder(UITable.bdr_OutsideFree);
+				tbl.updateBorder(UITable.BDR_OUTSIDE_FREE);
 			}
 			CashierApplication.getSelectedTable().setChainedTbls(null);
 			CashierApplication.clearSelection();

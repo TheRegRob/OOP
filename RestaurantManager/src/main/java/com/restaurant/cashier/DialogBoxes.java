@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
-import com.restaurant.cashier.GUIElements.UITable;
+import com.restaurant.cashier.guielements.UITable;
 
 public class DialogBoxes {
 	

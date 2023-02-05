@@ -47,8 +47,8 @@ public class Logger {
 	}
 	
 	private static void printText(String txt_message, Color color) {
-		StyledDocument doc = CashierApplication.getCashierInstance().getTb_Log().getStyledDocument();
-		Style style = CashierApplication.getCashierInstance().getTb_Log().addStyle("Color Style", null);
+		StyledDocument doc = CashierApplication.getCashierInstance().getTbLog().getStyledDocument();
+		Style style = CashierApplication.getCashierInstance().getTbLog().addStyle("Color Style", null);
 		StyleConstants.setForeground(style, color);
 		try {
 			doc.insertString(doc.getLength(), getTime() + " - " + txt_message + "\n", style);

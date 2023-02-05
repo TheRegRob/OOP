@@ -1,4 +1,4 @@
-package com.restaurant.cashier.GUIElements;
+package com.restaurant.cashier.guielements;
 
 import java.awt.Color;
 import java.awt.Image;
@@ -27,26 +27,26 @@ public class UITable {
 	private double			totalPayed;
 	private int				nOfCustomers;
 	private List<UITable>	chainedTbls;
-	private UITable			sx_NextTbl;
-	private UITable			dx_NextTbl;
+	private UITable			sxNextTbl;
+	private UITable			dxNextTbl;
 	private UIArrowChain	arrow;
 	
 	Point 					location;
 	JPanel 					pnlDest;
 	TableListener			listener;
 	
-	public static Border bdr_AboveFree 		= BorderFactory.createLineBorder(Color.GREEN, 	2);
-	public static Border bdr_OutsideFree 	= BorderFactory.createLineBorder(Color.GREEN, 	1);
-	public static Border bdr_AboveBusy		= BorderFactory.createLineBorder(Color.RED, 	2);
-	public static Border bdr_OutsideBusy 	= BorderFactory.createLineBorder(Color.RED, 	1);
+	public static final Border BDR_ABOVE_FREE 		= BorderFactory.createLineBorder(Color.GREEN, 	2);
+	public static final Border BDR_OUTSIDE_FREE 	= BorderFactory.createLineBorder(Color.GREEN, 	1);
+	public static final Border BDR_ABOVE_BUSY		= BorderFactory.createLineBorder(Color.RED, 	2);
+	public static final Border BDR_OUTSIDE_BUSY 	= BorderFactory.createLineBorder(Color.RED, 	1);
 	
-	public static Border bdr_FreeSelected 	= BorderFactory.createLineBorder(Color.GREEN, 	3);
-	public static Border bdr_BusySelected 	= BorderFactory.createLineBorder(Color.RED, 	3);
+	public static final Border BDR_FREE_SELECTED 	= BorderFactory.createLineBorder(Color.GREEN, 	3);
+	public static final Border BDR_BUSY_SELECTED 	= BorderFactory.createLineBorder(Color.RED, 	3);
 	
 	
-	URL url = CashierApplication.class.getResource("/UITable_Image.png");
+	final URL url = CashierApplication.class.getResource("/UITable_Image.png");
 	ImageIcon tbImage = new ImageIcon(url);
-	public JLabel lbl_Tab = new JLabel();
+	public JLabel lblTab = new JLabel();
 	
 	int width = 105;
 	int height = 83;
@@ -55,7 +55,7 @@ public class UITable {
 		return occupied;
 	}
 
-	public void setOccupied(boolean occupied) {
+	public void setOccupied(final boolean occupied) {
 		this.occupied = occupied;
 	}
 
@@ -63,7 +63,7 @@ public class UITable {
 		return booked;
 	}
 
-	public void setBooked(boolean booked) {
+	public void setBooked(final boolean booked) {
 		this.booked = booked;
 	}
 
@@ -71,7 +71,7 @@ public class UITable {
 		return nOfSits;
 	}
 
-	public void setNofSits(int nOfSits) {
+	public void setNofSits(final int nOfSits) {
 		this.nOfSits = nOfSits;
 	}
 
@@ -79,7 +79,7 @@ public class UITable {
 		return tableID;
 	}
 
-	public void setTableID(String tableID) {
+	public void setTableID(final String tableID) {
 		this.tableID = tableID;
 	}
 
@@ -87,7 +87,7 @@ public class UITable {
 		return bill;
 	}
 
-	public void setBill(double bill) {
+	public void setBill(final double bill) {
 		this.bill = bill;
 	}
 
@@ -95,7 +95,7 @@ public class UITable {
 		return totalPayed;
 	}
 
-	public void setTotalPayed(double totalPayed) {
+	public void setTotalPayed(final double totalPayed) {
 		this.totalPayed = totalPayed;
 	}
 
@@ -103,7 +103,7 @@ public class UITable {
 		return nOfCustomers;
 	}
 
-	public void setNofCustomers(int nOfCustomers) {
+	public void setNofCustomers(final int nOfCustomers) {
 		this.nOfCustomers = nOfCustomers;
 	}
 
@@ -111,35 +111,35 @@ public class UITable {
 		return chainedTbls;
 	}
 
-	public void setChainedTbls(List<UITable> chainedTbls) {
+	public void setChainedTbls(final List<UITable> chainedTbls) {
 		this.chainedTbls = chainedTbls;
 	}
 
 	public UITable getSx_NextTbl() {
-		return sx_NextTbl;
+		return sxNextTbl;
 	}
 
-	public void setSx_NextTbl(UITable sx_NextTbl) {
-		this.sx_NextTbl = sx_NextTbl;
+	public void setSx_NextTbl(final UITable sx_NextTbl) {
+		this.sxNextTbl = sx_NextTbl;
 	}
 
 	public UITable getDx_NextTbl() {
-		return dx_NextTbl;
+		return dxNextTbl;
 	}
 
-	public void setDx_NextTbl(UITable dx_NextTbl) {
-		this.dx_NextTbl = dx_NextTbl;
+	public void setDx_NextTbl(final UITable dx_NextTbl) {
+		this.dxNextTbl = dx_NextTbl;
 	}
 
 	public UIArrowChain getArrow() {
 		return arrow;
 	}
 
-	public void setArrow(UIArrowChain arrow) {
+	public void setArrow(final UIArrowChain arrow) {
 		this.arrow = arrow;
 	}
 
-	public UITable(Point loc, JPanel dest, int n_seats, String id) {
+	public UITable(final Point loc, final JPanel dest, final int n_seats, final String id) {
 		location = loc;
 		pnlDest = dest;
 		setNofSits(n_seats);
@@ -161,16 +161,16 @@ public class UITable {
     
 	public void addTable() {
 		listener = new TableListener();
-		lbl_Tab.setIcon(new ImageIcon(tbImage.getImage().getScaledInstance(100, 75, Image.SCALE_AREA_AVERAGING)));
-		lbl_Tab.setBorder(bdr_OutsideFree);
-		lbl_Tab.setHorizontalAlignment(SwingConstants.CENTER);
-		lbl_Tab.setBounds(location.x, location.y, width, height);
-		lbl_Tab.addMouseListener(listener);
-		pnlDest.add(lbl_Tab);
+		lblTab.setIcon(new ImageIcon(tbImage.getImage().getScaledInstance(100, 75, Image.SCALE_AREA_AVERAGING)));
+		lblTab.setBorder(BDR_OUTSIDE_FREE);
+		lblTab.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTab.setBounds(location.x, location.y, width, height);
+		lblTab.addMouseListener(listener);
+		pnlDest.add(lblTab);
 	}
 	
 	public void updateBorder(Border border) {
-		this.lbl_Tab.setBorder(border);
+		this.lblTab.setBorder(border);
 	}
 	
 	public void addMergeArrow() {
@@ -201,10 +201,10 @@ public class UITable {
 			if (CashierApplication.getSelectedTable() == null || getTableID() != CashierApplication.getSelectedTable().getTableID()) {
 				if (isOccupied()) {
 					for (int i = 0; i < getChainedTbls().size(); i++) {
-						getChainedTbls().get(i).updateBorder(bdr_AboveBusy);
+						getChainedTbls().get(i).updateBorder(BDR_ABOVE_BUSY);
 					}
 				} else {
-					updateBorder(bdr_AboveFree);
+					updateBorder(BDR_ABOVE_FREE);
 				}
 			}
 			
@@ -214,12 +214,12 @@ public class UITable {
 		public void mouseExited(MouseEvent e) {
 			if (CashierApplication.getSelectedTable() == null || getTableID() != CashierApplication.getSelectedTable().getTableID()) {
 				if (isOccupied()) {
-					updateBorder(bdr_OutsideBusy);
+					updateBorder(BDR_OUTSIDE_BUSY);
 					for (int i = 0; i < getChainedTbls().size(); i++) {
-						getChainedTbls().get(i).updateBorder(bdr_OutsideBusy);
+						getChainedTbls().get(i).updateBorder(BDR_OUTSIDE_BUSY);
 					}
 				} else {
-					updateBorder(bdr_OutsideFree);
+					updateBorder(BDR_OUTSIDE_FREE);
 				}
 			}
 		}

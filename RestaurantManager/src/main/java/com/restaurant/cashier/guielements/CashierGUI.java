@@ -1,4 +1,4 @@
-package com.restaurant.cashier.GUIElements;
+package com.restaurant.cashier.guielements;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -23,12 +23,12 @@ import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 
 import com.restaurant.cashier.CashierApplication;
-import com.restaurant.cashier.Listeners.CashierEventListener;
+import com.restaurant.cashier.listeners.CashierEventListener;
 import com.restaurant.utils.Logger;
 import com.restaurant.utils.Logger.TypeLog;
 
 public class CashierGUI {
-	private final String columnIDs = "ABCDEFGH";
+	private static final String COLUMNS_IDS = "ABCDEFGH";
 	
 	private static final int 	TBL_STARTING_X_POS = 15;
 	private static final int 	TBL_STARTING_Y_POS = 40;
@@ -39,11 +39,11 @@ public class CashierGUI {
 	private final JFrame frame = new JFrame("RestaurantManager - Cassa");
 	
 	private UITable[][] tables;
-	private JTextPane 	tb_Log;
-	private JButton		btn_OccupyTable;
-	private JButton		btn_FreeTable;
-	private JButton		btn_PayBill;
-	private JPanel		pnl_Tables;
+	private JTextPane 	tbLog;
+	private JButton		btnOccupyTable;
+	private JButton		btnFreeTable;
+	private JButton		btnPayBill;
+	//private JPanel		pnlTables;
 	private UITreeView  tblTree = new UITreeView(); 
 	
 	/*------------------- Getters and setters -------------------*/
@@ -53,55 +53,55 @@ public class CashierGUI {
 	}
 
 	public String getColumnIDs() {
-		return columnIDs;
+		return COLUMNS_IDS;
 	}
 
 	public UITable[][] getTables() {
-		return tables;
+		return tables.clone();
 	}
 
-	public void setTables(UITable[][] tables) {
-		this.tables = tables;
+	public void setTables(final UITable[][] tables) {
+		this.tables = tables.clone();
 	}
 	
-	public JButton getBtn_OccupyTable() {
-		return btn_OccupyTable;
+	public JButton getBtnOccupyTable() {
+		return btnOccupyTable;
 	}
 
-	public void setBtn_OccupyTable(JButton btn_OccupyTable) {
-		this.btn_OccupyTable = btn_OccupyTable;
+	public void setBtnOccupyTable(final JButton btnOccupyTable) {
+		this.btnOccupyTable = btnOccupyTable;
 	}
 
-	public JButton getBtn_FreeTable() {
-		return btn_FreeTable;
+	public JButton getBtnFreeTable() {
+		return btnFreeTable;
 	}
 
-	public void setBtn_FreeTable(JButton btn_FreeTable) {
-		this.btn_FreeTable = btn_FreeTable;
+	public void setBtnFreeTable(final JButton btnFreeTable) {
+		this.btnFreeTable = btnFreeTable;
 	}
 
-	public JButton getBtn_PayBill() {
-		return btn_PayBill;
+	public JButton getBtnPayBill() {
+		return btnPayBill;
 	}
 
-	public void setBtn_PayBill(JButton btn_PayBill) {
-		this.btn_PayBill = btn_PayBill;
+	public void setBtnPayBill(final JButton btnPayBill) {
+		this.btnPayBill = btnPayBill;
 	}
 
 	public UITreeView getTblTree() {
 		return tblTree;
 	}
 
-	public void setTblTree(UITreeView tblTree) {
+	public void setTblTree(final UITreeView tblTree) {
 		this.tblTree = tblTree;
 	}
 
-	public JTextPane getTb_Log() {
-		return tb_Log;
+	public JTextPane getTbLog() {
+		return tbLog;
 	}
 
-	public void setTb_Log(JTextPane tb_Log) {
-		this.tb_Log = tb_Log;
+	public void setTbLog(final JTextPane tbLog) {
+		this.tbLog = tbLog;
 	}
 	
 	/*-----------------------------------------------------------*/
@@ -119,25 +119,25 @@ public class CashierGUI {
 		taskbar.setIconImage(image);
 	}
 	
-	public void setDimensions(int x, int y) {
+	public void setDimensions(final int x, final int y) {
 		this.getFrame().setSize(x, y);
 	}
 	
 	public void setupComponents() {
-		JPanel container 		= setupContainer();
-		JPanel pnl_Left 		= setupLeftPnl();
-		JPanel pnl_Center 		= setupCenterPnl();
-		JPanel pnl_Right 		= setupRightPnl();
-		JScrollPane tb_Log 		= setupTextbox();
-		pnl_Tables = setupPnlTables();
-		setupAreaTable(4, 4, pnl_Tables);
-		pnl_Center.add(pnl_Tables, BorderLayout.CENTER);
-		pnl_Right.add(tb_Log, BorderLayout.CENTER);
-		pnl_Left.add(getTblTree(), BorderLayout.CENTER);
+		final JPanel container 		= setupContainer();
+		final JPanel pnlLeft 		= setupLeftPnl();
+		final JPanel pnlCenter 		= setupCenterPnl();
+		final JPanel pnlRight 		= setupRightPnl();
+		final JScrollPane tbLog 	= setupTextbox();
+		final JPanel pnlTables = setupPnlTables();
+		setupAreaTable(4, 4, pnlTables);
+		pnlCenter.add(pnlTables, BorderLayout.CENTER);
+		pnlRight.add(tbLog, BorderLayout.CENTER);
+		pnlLeft.add(getTblTree(), BorderLayout.CENTER);
 		
-		container.add(pnl_Left, setConstraints(0, 0, GridBagConstraints.HORIZONTAL, 0.4, new Insets(0, 10, 0, 0), 420));
-		container.add(pnl_Center, setConstraints(1, 0, GridBagConstraints.HORIZONTAL, 0.4, new Insets(0, 10, 0, 0), 410));
-		container.add(pnl_Right, setConstraints(2, 0, GridBagConstraints.HORIZONTAL, 0.7, new Insets(0, 10, 0, 10), 420));
+		container.add(pnlLeft, setupConstraints(0, 0, GridBagConstraints.HORIZONTAL, 0.4, new Insets(0, 10, 0, 0), 420));
+		container.add(pnlCenter, setupConstraints(1, 0, GridBagConstraints.HORIZONTAL, 0.4, new Insets(0, 10, 0, 0), 410));
+		container.add(pnlRight, setupConstraints(2, 0, GridBagConstraints.HORIZONTAL, 0.7, new Insets(0, 10, 0, 10), 420));
 		getFrame().getContentPane().add(container);
 		this.getFrame().setResizable(false);
 		this.getFrame().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -148,14 +148,13 @@ public class CashierGUI {
 	
 	/* START - Container */
 	private JPanel setupContainer() {
-		JPanel container = new JPanel(new GridBagLayout());
-		return container;
+		return new JPanel(new GridBagLayout());
 	}
 	/* END - Container*/
 	
 	/* START - Left Panel */
 	private JPanel setupLeftPnl() {
-		JPanel pnl = new JPanel(new BorderLayout());
+		final JPanel pnl = new JPanel(new BorderLayout());
 		pnl.add(setupLblPanel("Stato degli ordini"), BorderLayout.NORTH);
 		return pnl;
 	}
@@ -163,48 +162,47 @@ public class CashierGUI {
 	
 	/* START - Center Panel */
 	private JPanel setupCenterPnl() {
-		JPanel pnl 			= new JPanel(new BorderLayout());
-		JPanel pnl_Buttons	= setupPnlButtons();
+		final JPanel pnl 		= new JPanel(new BorderLayout());
+		final JPanel pnlButtons	= setupPnlButtons();
 		pnl.add(setupLblPanel("Stato dei tavoli"), BorderLayout.NORTH);
-		pnl.add(pnl_Buttons, BorderLayout.SOUTH);
+		pnl.add(pnlButtons, BorderLayout.SOUTH);
 		return pnl;
 	}
 	
-	private JLabel setupLblPanel(String title) {
-		JLabel lbl = new JLabel(title, SwingConstants.CENTER);
-		return lbl;
+	private JLabel setupLblPanel(final String title) {
+		return new JLabel(title, SwingConstants.CENTER);
 	}
 	
 	private JPanel setupPnlTables() {
-		JPanel pnl = new JPanel(null);
+		final JPanel pnl = new JPanel(null);
 		pnl.setBorder(new LineBorder(Color.BLACK, 1, true));
 		return pnl;
 	}
 	
 	private JPanel setupPnlButtons() {
-		JPanel pnl 			= new JPanel(new GridLayout());
-		String[] texts 		= new String[3];
-		String[] actCmds 	= new String[3];
-		texts[0] 			= "Occupa tavolo";
-		texts[1] 			= "Libera tavolo";
-		texts[2] 			= "Pagamento conto";
-		actCmds[0]			= CashierEventListener.eventList[CashierEventListener.EventsIdx.ev_BtnOccupyTbl.getValue()];
-		actCmds[1]			= CashierEventListener.eventList[CashierEventListener.EventsIdx.ev_BtnClearTbl.getValue()];
-		actCmds[2]			= CashierEventListener.eventList[CashierEventListener.EventsIdx.ev_BtnPayBill.getValue()];
-		JButton[] btns = setupButtons(3, texts, actCmds);
-		setBtn_OccupyTable(btns[0]);
-		setBtn_FreeTable(btns[1]);
-		setBtn_PayBill(btns[2]);
+		final JPanel pnl 		= new JPanel(new GridLayout());
+		final String[] texts 	= new String[3];
+		final String[] actCmds 	= new String[3];
+		texts[0] 				= "Occupa tavolo";
+		texts[1] 				= "Libera tavolo";
+		texts[2] 				= "Pagamento conto";
+		actCmds[0]				= CashierEventListener.EVENT_LIST[CashierEventListener.EventsIdx.ev_BtnOccupyTbl.getValue()];
+		actCmds[1]				= CashierEventListener.EVENT_LIST[CashierEventListener.EventsIdx.ev_BtnClearTbl.getValue()];
+		actCmds[2]				= CashierEventListener.EVENT_LIST[CashierEventListener.EventsIdx.ev_BtnPayBill.getValue()];
+		final JButton[] btns 	= setupButtons(3, texts, actCmds);
+		setBtnOccupyTable(btns[0]);
+		setBtnFreeTable(btns[1]);
+		setBtnPayBill(btns[2]);
 		for (int i = 0; i < 3; i++) {
 			pnl.add(btns[i]);
 		}
 		return pnl;
 	}
 	
-	private JButton[] setupButtons(int nOfButton, String[] texts, String[] cmds) {
-		JButton[] btnList = new JButton[nOfButton];
+	private JButton[] setupButtons(final int nOfButton, final String[] texts, final String[] cmds) {
+		final JButton[] btnList = new JButton[nOfButton];
 		for(int i = 0; i < nOfButton; i++) {
-			JButton btn = new JButton(texts[i]);
+			final JButton btn = new JButton(texts[i]);
 			btn.setActionCommand(cmds[i]);
 			btn.addActionListener(listener);
 			btn.setEnabled(false);
@@ -213,15 +211,15 @@ public class CashierGUI {
 		return btnList;
 	}
 	
-	private void setupAreaTable(int rows, int columns, JPanel pnl) {
+	private void setupAreaTable(final int rows, final int columns, final JPanel pnl) {
 		setTables(new UITable[rows][columns]);
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < columns; j++) {
-				int x = TBL_STARTING_X_POS + (TBL_OFFSET_X_VAL * j);
-				int y = TBL_STARTING_Y_POS + (TBL_OFFSET_Y_VAL * i);
-				Point pt = new Point(x, y);
-				UITable tbl = new UITable(pt, pnl, 5, Integer.toString(i + 1) + getColumnIDs().charAt(j));
-				getTables()[i][j] = tbl;
+				final int x 		= TBL_STARTING_X_POS + (TBL_OFFSET_X_VAL * j);
+				final int y 		= TBL_STARTING_Y_POS + (TBL_OFFSET_Y_VAL * i);
+				final Point pt 		= new Point(x, y);
+				final UITable tbl	= new UITable(pt, pnl, 5, Integer.toString(i + 1) + getColumnIDs().charAt(j));
+				getTables()[i][j] 	= tbl;
 				getTables()[i][j].addTable();
 			}
 		}
@@ -230,15 +228,15 @@ public class CashierGUI {
 	
 	/* START - Right Panel */
 	private JPanel setupRightPnl() {
-		JPanel pnl = new JPanel(new BorderLayout());
+		final JPanel pnl = new JPanel(new BorderLayout());
 		pnl.add(setupLblPanel("Cronologia eventi"), BorderLayout.NORTH);
 		
 		return pnl;
 	}
 	
 	private JScrollPane setupTextbox() {
-		this.setTb_Log(new JTextPane());
-		final JScrollPane scroll = new JScrollPane(getTb_Log());
+		this.setTbLog(new JTextPane());
+		final JScrollPane scroll = new JScrollPane(getTbLog());
 		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 	    scroll.setBorder(new LineBorder(Color.BLACK, 1, true));
 	    Logger.Log(TypeLog.tl_Info, "Restaurant Manager avviato");
@@ -247,8 +245,8 @@ public class CashierGUI {
 	/* END - Left Panel */
 	
 	/* START - Layouts */
-	private GridBagConstraints setConstraints(int grdX, int grdY, int pos, double wgtX, Insets borders, int height) {
-		GridBagConstraints gbc = new GridBagConstraints();
+	private GridBagConstraints setupConstraints(final int grdX, final int grdY, final int pos, final double wgtX, final Insets borders, final int height) {
+		final GridBagConstraints gbc = new GridBagConstraints();
 		gbc.gridx 	= grdX;
 		gbc.gridy 	= grdY;
 		gbc.fill 	= pos;
